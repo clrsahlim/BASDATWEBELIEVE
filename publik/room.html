@@ -4,62 +4,248 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
     <title>Manajemen Hotel</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .bg-cream {
+            background-color: #FFDBB5;
+        }
+
+        .bg-coklat {
+            background-color: #6C4E31;
+        }
+
+        .btn-book, .btn-unavailable {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.5rem 2rem; /* Lebih panjang di sisi kiri dan kanan */
+            width: auto; /* Membiarkan lebar menyesuaikan konten */
+            border-radius: 25px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-book {
+            background-color: #FFDBB5;
+            color: black;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-book:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+         }   
+
+        .btn-unavailable {
+            background-color: #BE1717;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            cursor: not-allowed;
+        }
+
+        .btn-unavailable:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+            cursor: not-allowed;
+        }
+        .text-sm-gray {
+            color: #7F7F7F;
+        }
+
+        .font-semibold-text {
+            font-weight: 600;
+        }
+
+        .sidebar-active {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .room-card {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 4px solid #6C4E31;
+            border-radius: 12px;
+            height: auto;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .card-header {
+            background-color: #fff;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-body {
+            background-color: #fff;
+            padding: 8px 12px;
+            border-top: 4px solid #6C4E31;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            padding-right: 12px;
+        }
+
+        .card-text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .card-status, .card-price, .card-number {
+            font-weight: 600;
+        }
+
+        .card-status {
+            color: black;
+        }
+
+        .card-header h2 {
+            margin-right: 8px;
+        }
+
+        .card-header span {
+            font-size: 0.875rem;
+            font-style: italic;
+        }
+
+        .card-body p {
+            font-weight: 600;
+        }
+
+    </style>
 </head>
-<body class="flex flex-col h-screen">
-    <body class="flex flex-col h-screen">
-        <nav class="bg-cream p-5 flex items-center justify-between">
-            <button id="tombolSidebar">
-                <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
-            </button>
-            <h1 class="text-3xl font-audiowide text-center flex-grow">ROOM MANAGEMENT</h1>
-        </nav>
-    
-        <div class="flex flex-1">
-            <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
-                <ul>
-                    <li class="flex items-center mb-8 mr-2 gap-2 mt-5">
-                        <img class="h-5" src="img/dashboard.png" alt="">
-                        <a href="dasboard.html" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
-                    </li>
+<body class="flex flex-col h-screen bg-white">
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/room.png" alt="">
-                        <a href="room.html" class="font-audiowide text-xs md:text-xl underline underline-offset-4">ROOM MANAGEMENT</a>
-                    </li>
+    <nav class="bg-cream p-5 flex items-center justify-between">
+        <button id="tombolSidebar">
+            <img class="h-8 w-8" id="humb" src="img/1.png" alt="Sidebar Toggle">
+        </button>
+        <h1 class="text-3xl font-audiowide text-center flex-grow">ROOM MANAGEMENT</h1>
+    </nav>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/guest.png" alt="">
-                        <a href="guest.html" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
-                    </li>
-
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/reserv.png" alt="">
-                        <a href="reservasi.html" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
-                    </li>
-
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/in.png" alt="">
-                        <a href="checkin.html" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
-                    </li>
-
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/out.png" alt="">
-                        <a href="checkout.html" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
-                    </li>
-
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/payment.png" alt="">
-                        <a href="payment.html" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="flex-1 p-10">
-                <h1 class="text-5xl">halo</h1>
-            </div>
+    <div class="flex flex-1">
+        <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
+            <ul>
+                <li class="flex items-center mb-8 mr-2 gap-2 mt-5">
+                    <img class="h-5" src="img/dashboard.png" alt="">
+                    <a href="dasboard.html" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/room.png" alt="">
+                    <a href="room.html" class="font-audiowide text-xs md:text-xl sidebar-active">ROOM MANAGEMENT</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/guest.png" alt="">
+                    <a href="guest.html" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/reserv.png" alt="">
+                    <a href="reservasi.html" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/in.png" alt="">
+                    <a href="checkin.html" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/out.png" alt="">
+                    <a href="checkout.html" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/payment.png" alt="">
+                    <a href="payment.html" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
+                </li>
+            </ul>
         </div>
 
-        <script src="js/klik.js"></script>
+        <main class="flex-1 p-6 lg:p-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="room-card">
+                    <div class="card-header">
+                        <h2 class="text-lg font-bold card-text">Guest Room</h2>
+                        <span class="text-sm font-medium text-gray-500 card-text">Single Bed</span>
+                    </div>
+                    <div class="card-body">
+                        <p>Status: <span class="font-semibold card-status">Available</span></p>
+                        <p>Room Number: <span class="font-semibold card-number">401</span></p>
+                        <p>Price: <span class="font-semibold card-price">Rp. 1.500k/night</span></p>
+                    </div>
+                    <div class="btn-container">
+                        <button 
+                            class="btn-book"
+                            onclick="bookRoom(401)">
+                            Book
+                        </button>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="card-header">
+                        <h2 class="text-lg font-bold card-text">Guest Room</h2>
+                        <span class="text-sm font-medium text-gray-500 card-text">Double Bed</span>
+                    </div>
+                    <div class="card-body">
+                        <p>Status: <span class="font-semibold card-status">Available</span></p>
+                        <p>Room Number: <span class="font-semibold card-number">402</span></p>
+                        <p>Price: <span class="font-semibold card-price">Rp. 1.500k/night</span></p>
+                    </div>
+                    <div class="btn-container">
+                        <button 
+                            class="btn-book"
+                            onclick="bookRoom(402)">
+                            Book
+                        </button>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="card-header">
+                        <h2 class="text-lg font-bold card-text">Guest Room</h2>
+                        <span class="text-sm font-medium text-gray-500 card-text">Double Bed</span>
+                    </div>
+                    <div class="card-body">
+                        <p>Status: <span class="font-semibold card-status">Booked</span></p>
+                        <p>Room Number: <span class="font-semibold card-number">404</span></p>
+                        <p>Price: <span class="font-semibold card-price">Rp. 1.500k/night</span></p>
+                    </div>
+                    <div class="btn-container">
+                        <button 
+                            class="btn-unavailable"
+                            disabled>
+                            Unavailable
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function bookRoom(roomNumber) {
+            alert(`Room ${roomNumber} successfully booked!`);
+        }
+
+        document.getElementById('tombolSidebar').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>
