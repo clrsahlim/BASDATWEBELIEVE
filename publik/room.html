@@ -23,8 +23,8 @@
         .btn-book, .btn-unavailable {
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
-            font-size: 0.875rem;
-            padding: 0.5rem 2rem; /* Lebih panjang di sisi kiri dan kanan */
+            font-size: 1.1rem;
+            padding: 0.25rem 1.4rem; /* Lebih panjang di sisi kiri dan kanan */
             width: auto; /* Membiarkan lebar menyesuaikan konten */
             border-radius: 25px;
             transition: all 0.3s ease-in-out;
@@ -33,7 +33,7 @@
         .btn-book {
             background-color: #FFDBB5;
             color: black;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
         }
 
         .btn-book:hover {
@@ -45,6 +45,7 @@
             background-color: #BE1717;
             color: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
             cursor: not-allowed;
         }
 
@@ -71,7 +72,7 @@
             flex-direction: column;
             position: relative;
             border: 4px solid #6C4E31;
-            border-radius: 12px;
+            border-radius: 30px;
             height: auto;
             overflow: hidden;
             margin-bottom: 16px;
@@ -83,12 +84,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 6px;
+            gap: 9px;
         }
 
         .card-body {
             background-color: #fff;
-            padding: 8px 12px;
+            padding: 15px 30px;
             border-top: 4px solid #6C4E31;
             flex-grow: 1;
             display: flex;
@@ -99,9 +100,9 @@
         .btn-container {
             display: flex;
             justify-content: flex-end;
-            margin-top: 16px;
+            margin-top: 12px;
             margin-bottom: 16px;
-            padding-right: 12px;
+            padding-right: 20px;
         }
 
         .card-text {
@@ -117,12 +118,8 @@
             color: black;
         }
 
-        .card-header h2 {
-            margin-right: 8px;
-        }
-
         .card-header span {
-            font-size: 0.875rem;
+            font-size: 1rem;
             font-style: italic;
         }
 
@@ -176,16 +173,25 @@
         </div>
 
         <main class="flex-1 p-6 lg:p-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div class="room-card">
                     <div class="card-header">
-                        <h2 class="text-lg font-bold card-text">Guest Room</h2>
+                        <h2 class="text-xl font-bold card-text">Guest Room</h2>
                         <span class="text-sm font-medium text-gray-500 card-text">Single Bed</span>
                     </div>
-                    <div class="card-body">
-                        <p>Status: <span class="font-semibold card-status">Available</span></p>
-                        <p>Room Number: <span class="font-semibold card-number">401</span></p>
-                        <p>Price: <span class="font-semibold card-price">Rp. 1.500k/night</span></p>
+                    <div class="card-body text-lg">
+                        <div class="grid grid-cols-2 mb-2">
+                            <p class="font-semibold card-status text">Status</p>
+                            <p class="font-semibold card-status">: &nbspAvailable</p>
+                        </div>
+                        <div class="grid grid-cols-2 mb-2">
+                            <p class="font-semibold card-number">Room Number</p>
+                            <p class="font-semibold card-number">: &nbsp401</p>
+                        </div>
+                        <div class="grid grid-cols-2">
+                            <p class="font-semibold card-price">Price</p>
+                            <p class="font-semibold card-price">: &nbspIDR 1.500k/night</p>
+                        </div>
                     </div>
                     <div class="btn-container">
                         <button 
@@ -198,13 +204,22 @@
 
                 <div class="room-card">
                     <div class="card-header">
-                        <h2 class="text-lg font-bold card-text">Guest Room</h2>
-                        <span class="text-sm font-medium text-gray-500 card-text">Double Bed</span>
+                        <h2 class="text-xl font-bold card-text">Guest Room</h2>
+                        <span class="text-sm font-medium text-gray-500 card-text">Single Bed</span>
                     </div>
-                    <div class="card-body">
-                        <p>Status: <span class="font-semibold card-status">Available</span></p>
-                        <p>Room Number: <span class="font-semibold card-number">402</span></p>
-                        <p>Price: <span class="font-semibold card-price">Rp. 1.500k/night</span></p>
+                    <div class="card-body text-lg">
+                        <div class="grid grid-cols-2 mb-2">
+                            <p class="font-semibold card-status text">Status</p>
+                            <p class="font-semibold card-status">: &nbspAvailable</p>
+                        </div>
+                        <div class="grid grid-cols-2 mb-2">
+                            <p class="font-semibold card-number">Room Number</p>
+                            <p class="font-semibold card-number">: &nbsp402</p>
+                        </div>
+                        <div class="grid grid-cols-2">
+                            <p class="font-semibold card-price">Price</p>
+                            <p class="font-semibold card-price">: &nbspIDR 1.500k/night</p>
+                        </div>
                     </div>
                     <div class="btn-container">
                         <button 
@@ -217,13 +232,22 @@
 
                 <div class="room-card">
                     <div class="card-header">
-                        <h2 class="text-lg font-bold card-text">Guest Room</h2>
-                        <span class="text-sm font-medium text-gray-500 card-text">Double Bed</span>
+                        <h2 class="text-xl font-bold card-text">Guest Room</h2>
+                        <span class="text-sm font-medium text-gray-500 card-text">Single Bed</span>
                     </div>
-                    <div class="card-body">
-                        <p>Status: <span class="font-semibold card-status">Booked</span></p>
-                        <p>Room Number: <span class="font-semibold card-number">404</span></p>
-                        <p>Price: <span class="font-semibold card-price">Rp. 1.500k/night</span></p>
+                    <div class="card-body text-lg">
+                        <div class="grid grid-cols-2 mb-2">
+                            <p class="font-semibold card-status text">Status</p>
+                            <p class="font-semibold card-status">: &nbspAvailable</p>
+                        </div>
+                        <div class="grid grid-cols-2 mb-2">
+                            <p class="font-semibold card-number">Room Number</p>
+                            <p class="font-semibold card-number">: &nbsp404</p>
+                        </div>
+                        <div class="grid grid-cols-2">
+                            <p class="font-semibold card-price">Price</p>
+                            <p class="font-semibold card-price">: &nbspIDR 1.500k/night</p>
+                        </div>
                     </div>
                     <div class="btn-container">
                         <button 

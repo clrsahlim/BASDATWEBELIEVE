@@ -4,8 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
     <title>Manajemen Hotel</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .bg-cream {
+            background-color: #FFDBB5;
+        }
+
+        .bg-coklat {
+            background-color: #6C4E31;
+        }
+
+        .btn-green {
+            background-color: #0FB30F;
+            color: black;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2px 10px;
+            border-radius: 20%;
+            color: white;
+            margin: 5px 0px;
+        }
+
+        .btn-red {
+            background-color: #BE1717;
+            color: black;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color:white;
+
+        }
+
+        .status-card {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 4px solid #6C4E31;
+            border-radius: 30px;
+            height: auto;
+            overflow: hidden;
+            margin: 25px 100px; 
+        }
+
+        .card-header {
+            background-color: #ffffff;
+            padding: 3px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 4px solid #6C4E31;
+        }
+
+        .card-header .card-text {
+            font-size: 25px;
+            color: #000000;
+        }
+
+        .card-body .body-card-text {
+            font-size: 70px;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: row;
+            height: 100%; /* Pastikan kontainer memiliki tinggi penuh */
+        }
+
+        .card-body .left {
+            width: 50%; 
+            height: 100%; /* Sesuaikan tinggi elemen dengan kontainer induk */
+            border-right: 4px solid #6C4E31; 
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            text-align: center;
+            padding: 8px;
+        }
+
+
+        .card-body .right {
+            width: 50%; /* Membagi area kanan menjadi 50% */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr; /* 1 card per baris */
+            gap: 16px;
+        }
+
+        .btn-green, .btn-red {
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+        }
+</style>
 </head>
+
 <body class="flex flex-col h-screen">
     <body class="flex flex-col h-screen">
         <nav class="bg-cream p-5 flex items-center justify-between">
@@ -55,10 +162,54 @@
                 </ul>
             </div>
 
-            <div class="flex-1 p-10">
-                <h1 class="text-5xl">halo</h1>
-            </div>
-        </div>
+            <main class="flex-1 lg:p-4">
+                <div class="grid gap-1 grid-cols-1">
+                    <div class="status-card">
+                        <div class="card-header">
+                            <h2 class="font-bold card-text">Total Rooms</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="left">
+                                <p class="body-card-text">50</p>
+                            </div>
+                            <div class="right">
+                                <button class="btn-green text-lg w-full md:w-40">12 Available</button>
+                                <button class="btn-red text-lg w-full md:w-40">38 Occupied</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-card">
+                        <div class="card-header">
+                            <h2 class="font-bold card-text">Current Guests</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="left">
+                                <p class="body-card-text">10</p>
+                            </div>
+                            <div class="right">
+                                <button class="btn-green text-lg w-full md:w-40">5 Checks-In</button>
+                                <button class="btn-red text-lg w-full md:w-40">5 Checks-Out</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-card">
+                        <div class="card-header">
+                            <h2 class="font-bold card-text">Reservations</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="left">
+                                <p class="body-card-text">7</p>
+                            </div>
+                            <div class="right">
+                                <button class="btn-green text-lg w-full md:w-40">2 Paid</button>
+                                <button class="btn-red text-lg w-full md:w-40">5 Pending</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
 
         <script src="js/klik.js"></script>
 </body>
