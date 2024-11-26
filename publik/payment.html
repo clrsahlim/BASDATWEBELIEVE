@@ -5,61 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <title>Manajemen Hotel</title>
+    <style>
+    #timeDisplay {
+        min-width: 150px; /* Minimal lebar agar waktu tidak terlalu sempit */
+        text-align: center; /* Teks di tengah */
+        background-color: transparent; /* Latar belakang transparan */
+        color: rgb(108, 78, 49); /* Warna teks sesuai permintaan */
+        border: 2px solid rgb(108, 78, 49); /* Tambahkan border agar lebih terlihat */
+        border-radius: 1.5rem; /* Membulatkan sudut */
+        padding: 0.5rem 1rem; /* Jarak dalam elemen */
+        font-weight: 600; /* Tebal teks */
+        font-size: 0.875rem; /* Ukuran font */
+        white-space: nowrap; /* Hindari teks terpotong */
+    }
+    </style>
 </head>
 <body class="flex flex-col h-screen">
-    <body class="flex flex-col h-screen">
-        <nav class="bg-cream p-5 flex items-center justify-between">
-            <button id="tombolSidebar">
-                <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
-            </button>
-            <h1 class="text-3xl font-audiowide text-center flex-grow">PAYMENT</h1>
-        </nav>
-    
-        <div class="flex flex-1">
-            <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
-                <ul>
-                    <li class="flex items-center mb-8 mr-2 gap-2 mt-5">
-                        <img class="h-5" src="img/dashboard.png" alt="">
-                        <a href="dasboard.html" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
-                    </li>
+    <nav class="bg-cream p-5 flex items-center justify-between">
+        <button id="tombolSidebar">
+            <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
+        </button>
+        <h1 class="text-3xl font-audiowide text-center flex-grow">DASHBOARD</h1>
+        <div class="flex items-center space-x-4">
+            <div id="timeDisplay" class="bg-gray-200 px-3 py-1" style="margin-right: 1rem;"></div>
+            <img id="userIcon" class="h-8 w-8 rounded-full" src="img/aaa.png" alt="User Icon">
+        </div>
+    </nav>    
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/room.png" alt="">
-                        <a href="room.html" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
-                    </li>
-
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/guest.png" alt="">
-                        <a href="guest.html" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
-                    </li>
-
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/reserv.png" alt="">
-                        <a href="reservasi.html" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
-                    </li>
-
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/in.png" alt="">
-                        <a href="checkin.html" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
-                    </li>
-
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/out.png" alt="">
-                        <a href="checkout.html" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
-                    </li>
-
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/payment.png" alt="">
-                        <a href="payment.html" class="font-audiowide text-xs md:text-xl underline underline-offset-4">PAYMENT</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="flex-1 p-10">
-                <h1 class="text-5xl">halo</h1>
-            </div>
+    <div class="flex flex-1">
+        <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
+            <ul>
+                <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
+                    <img class="h-5" src="img/dashboard.png" alt="">
+                    <a href="dasboard.html" class="font-audiowide text-xs md:text-xl underline underline-offset-4">DASHBOARD</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/room.png" alt="">
+                    <a href="room.html" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/guest.png" alt="">
+                    <a href="guest.html" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/reserv.png" alt="">
+                    <a href="reservasi.html" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/in.png" alt="">
+                    <a href="checkin.html" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/out.png" alt="">
+                    <a href="checkout.html" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
+                </li>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/payment.png" alt="">
+                    <a href="payment.html" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
+                </li>
+            </ul>
         </div>
 
-        <script src="js/klik.js"></script>
+        <div class="flex-1 p-10">
+            <h1 class="text-5xl">halo</h1>
+        </div>
+    </div>
+
+    <!-- Tambahin Script Buat Real-Time -->
+    <script src="js/klik.js"></script>
+    <script>
+    function updateTime() {
+        const timeDisplay = document.getElementById('timeDisplay');
+        const now = new Date();
+
+        // Format tanggal
+        const day = now.getDate();
+        const month = now.toLocaleString('en-US', { month: 'long' });
+        const year = now.getFullYear();
+
+        // Menambahkan "st", "nd", "rd", atau "th" pada tanggal
+        const daySuffix = 
+            day === 1 || day === 21 || day === 31 ? 'st' : 
+            day === 2 || day === 22 ? 'nd' : 
+            day === 3 || day === 23 ? 'rd' : 'th';
+
+        // Format waktu
+        const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+        const formattedTime = now.toLocaleTimeString('en-US', timeOptions);
+
+        // Gabungkan hasil format
+        timeDisplay.textContent = `${month} ${day}${daySuffix}, ${year} | ${formattedTime}`;
+    }
+
+    // Panggil pertama kali
+    updateTime();
+
+    // Update tiap detik untuk waktu
+    setInterval(updateTime, 1000);
+
+    </script>
 </body>
 </html>
