@@ -4,7 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <title>Manajemen Hotel</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .bg-cream {
+            background-color: #FFDBB5;
+        }
+
+        .bg-coklat {
+            background-color: #6C4E31;
+        }
+
+        .room-card1{
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-radius: 30px;
+            height: auto;
+            overflow: hidden;
+            margin-left: 80px;
+            margin-right: 45px;
+        }
+
+        .room-card2{
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-radius: 30px;
+            height: auto;
+            overflow: hidden;
+            margin-left: 45px;
+            margin-right: 80px;
+        }
+
+        .room-card1, .room-card2{
+            margin-bottom: 40px;
+            margin-top: 30px;
+        }
+
+        .card-header {
+            background-color: #e30000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-header .card-text {
+            font-size: 25px;
+            color: #000000;
+        }
+
+        .card-header img {
+            width: 100%;
+            height: 19rem; 
+            object-fit: cover; 
+            object-position: center; 
+        }
+
+        .card-body .room-type {
+            color: #ffffff;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-body .room-desc{
+            color: #ffffff;
+            margin-top: 8px;
+            margin-bottom: 3px;
+            width: 65%;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            height: 100%; 
+            background-color: #6C4E31;
+            padding: 15px 20px;
+        }
+
+        .card-body .bottom{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+        }
+
+        .card-body .view-more{
+            color: #ffffff;
+            width: 20%;
+            margin-top: 25px;
+            text-align: right;
+            align-items: center;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .card-body .view-more:hover{
+            color: #FFDBB5;
+        }
+
+        #overlay {
+            backdrop-filter: blur(3px);
+        }
+
+        .overlay-card-header {
+            background-color: #6C4E31; 
+            color: #ffffff; 
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .overlay-card-header img{
+            width: 100%;
+            height: 30rem; 
+            object-fit: cover; 
+            object-position: center; 
+        }
+
+        .overlay-card-header h2{
+            font-weight: 500;
+        }
+
+    </style>
 </head>
 <body class="flex flex-col h-screen">
         <nav class="bg-cream p-5 flex items-center justify-between">
@@ -54,11 +181,173 @@
                 </ul>
             </div>
 
-            <div class="flex-1 p-10">
-                <h1 class="text-5xl">halo</h1>
+            <main class="flex-1 lg:p-10">
+                <div class="grid gap-1 grid-cols-2">
+                    <div class="room-card1">
+                        <div class="card-header">
+                            <img src="img/executiveking.webp">
+                        </div>
+                        <div class="card-body">
+                            <div class="top">
+                                <p class="room-type text-xl font-semibold">Executive King</p>
+                            </div>
+                            <div class="bottom">
+                                <p class="room-desc text-sm">Executive lounge access, Guest room, 1 King, Panoramic City view</p>
+                                <p class="view-more text-gray-500" data-room="Executive King">View More</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="room-card2">
+                        <div class="card-header">
+                            <img src="img/executivetwin.webp">
+                        </div>
+                        <div class="card-body">
+                            <div class="top">
+                                <p class="room-type text-xl font-semibold">Executive Twin</p>
+                            </div>
+                            <div class="bottom">
+                                <p class="room-desc text-sm">Executive lounge access, Guest room, 2 Twin, Panoramic City view</p>
+                                <p class="view-more text-gray-500" data-room="Executive Twin">View More</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="room-card1">
+                        <div class="card-header">
+                            <img src="img/exedeluxeking.webp">
+                        </div>
+                        <div class="card-body">
+                            <div class="top">
+                                <p class="room-type text-xl font-semibold">Executive Deluxe King</p>
+                            </div>
+                            <div class="bottom">
+                                <p class="room-desc text-sm">Executive lounge access, Larger Guest room, <br>1 King, Panoramic City view</p>
+                                <p class="view-more text-gray-500" data-room="Executive Deluxe King">View More</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="room-card2">
+                        <div class="card-header">
+                            <img src="img/juniorsuite.avif">
+                        </div>
+                        <div class="card-body">
+                            <div class="top">
+                                <p class="room-type text-xl font-semibold">Junior Suite</p>
+                            </div>
+                            <div class="bottom">
+                                <p class="room-desc text-sm">Executive lounge access, Junior Suite, 1 King, Panoramic City view</p>
+                                <p class="view-more text-gray-500" data-room="Junior Suite">View More</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="room-card1">
+                        <div class="card-header">
+                            <img src="img/ambassadorsuite.avif">
+                        </div>
+                        <div class="card-body">
+                            <div class="top">
+                                <p class="room-type text-xl font-semibold">Ambassador Suite</p>
+                            </div>
+                            <div class="bottom">
+                                <p class="room-desc text-sm">Executive lounge access, Larger Suite, 1 King, Panoramic City view</p>
+                                <p class="view-more text-gray-500" data-room="Ambassador Suite">View More</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="room-card2">
+                        <div class="card-header">
+                            <img src="img/presidentialsuite.webp">
+                        </div>
+                        <div class="card-body">
+                            <div class="top">
+                                <p class="room-type text-xl font-semibold">Presidential Suite</p>
+                            </div>
+                            <div class="bottom">
+                                <p class="room-desc text-sm">Executive lounge access, Presidential Suite, <br>1 King, Panoramic City view</p>
+                                <p class="view-more text-gray-500" data-room="Presidential Suite">View More</p> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="overlay" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center z-50">
+            <div class="bg-white rounded-3xl w-3/4 lg:w-1/2 shadow-lg relative">
+                <button id="closeOverlay" class="absolute top-5 right-5 text-white text-lg font-bold">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                        <path d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div id="overlayContent" class="text-gray-800">
+                </div>
             </div>
         </div>
 
         <script src="js/klik.js"></script>
+        <script>
+            document.querySelectorAll('.view-more').forEach(button => {
+                button.addEventListener('click', function () {
+                    const room = this.getAttribute('data-room');
+                    const overlayContent = document.getElementById('overlayContent');
+
+                    // Set content based on room type
+                    switch (room) {
+                        case 'Executive King':
+                        overlayContent.innerHTML = `
+                                <div class="overlay-card-header rounded-2xl">
+                                    <h2 class="text-xl p-4 ml-3 text-left">Executive King</h2> <!-- Judul kamar -->
+                                    <img src="img/executiveking.webp" class="w-full object-cover mb-4" alt="Executive King Room"> <!-- Gambar fit -->
+                                </div>
+                                <p class="text-gray-800">Executive lounge access, Guest room, 2 Twin, Panoramic City view</p>
+                            `;
+                            break;
+                        case 'Executive Twin':
+                            overlayContent.innerHTML = `
+                                <h2 class="text-2xl font-bold mb-4">Executive Twin</h2>
+                                <p>Perfect for friends or family, this room features two twin beds and access to the executive lounge.</p>
+                            `;
+                            break;
+                        case 'Executive Deluxe King':
+                            overlayContent.innerHTML = `
+                                <h2 class="text-2xl font-bold mb-4">Executive Deluxe King</h2>
+                                <p>Spacious and luxurious, this room offers a king-sized bed with panoramic city views.</p>
+                            `;
+                            break;
+                        case 'Junior Suite':
+                            overlayContent.innerHTML = `
+                                <h2 class="text-2xl font-bold mb-4">Junior Suite</h2>
+                                <p>Relax in style with this suite featuring executive lounge access and stunning city views.</p>
+                            `;
+                            break;
+                        case 'Ambassador Suite':
+                            overlayContent.innerHTML = `
+                                <h2 class="text-2xl font-bold mb-4">Ambassador Suite</h2>
+                                <p>Experience unparalleled luxury in this larger suite with a king bed and panoramic views.</p>
+                            `;
+                            break;
+                        case 'Presidential Suite':
+                            overlayContent.innerHTML = `
+                                <h2 class="text-2xl font-bold mb-4">Presidential Suite</h2>
+                                <p>The ultimate in luxury, this suite offers a king bed, executive lounge access, and breathtaking views.</p>
+                            `;
+                            break;
+                        default:
+                            overlayContent.innerHTML = `<p>No details available for this room.</p>`;
+                    }
+
+                    document.getElementById('overlay').classList.remove('hidden');
+                });
+            });
+
+            document.getElementById('closeOverlay').addEventListener('click', function () {
+                document.getElementById('overlay').classList.add('hidden');
+            });
+
+        </script>
 </body>
 </html>
