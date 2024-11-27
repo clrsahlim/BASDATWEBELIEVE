@@ -111,24 +111,42 @@
         }
 
         #overlay {
+            overflow-y: auto;
             backdrop-filter: blur(3px);
+        }
+
+        body.no-scroll {
+            overflow: hidden;
         }
 
         .overlay-card-header {
             background-color: #6C4E31; 
             color: #ffffff; 
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
         }
 
-        .overlay-card-header img{
+        .overlay-description img{
             width: 100%;
-            height: 30rem; 
+            height: 28rem; 
             object-fit: cover; 
             object-position: center; 
         }
 
         .overlay-card-header h2{
             font-weight: 500;
+        }
+
+        #closeOverlay {
+            z-index: 60; 
+        }
+
+        .overlay-card-description{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 50px;
         }
 
     </style>
@@ -294,46 +312,422 @@
                 button.addEventListener('click', function () {
                     const room = this.getAttribute('data-room');
                     const overlayContent = document.getElementById('overlayContent');
-
+                    
                     // Set content based on room type
                     switch (room) {
                         case 'Executive King':
                         overlayContent.innerHTML = `
-                                <div class="overlay-card-header rounded-2xl">
-                                    <h2 class="text-xl p-4 ml-3 text-left">Executive King</h2> <!-- Judul kamar -->
-                                    <img src="img/executiveking.webp" class="w-full object-cover mb-4" alt="Executive King Room"> <!-- Gambar fit -->
+                                <div class="overlay-card-header sticky top-10">
+                                    <h2 class="text-xl p-4 ml-3 text-left">Executive King</h2> <!-- Judul kamar -->      
                                 </div>
-                                <p class="text-gray-800">Executive lounge access, Guest room, 2 Twin, Panoramic City view</p>
+                                
+                                <div class="overlay-description overflow-y-auto max-h-[80vh]">
+                                    <img src="img/executiveking.webp" class="w-full object-cover mb-4" alt="Executive King Room"> <!-- Gambar fit -->
+
+                                    <div class="overlay-headdescription p-3 ml-6 mb-3">
+                                        <p class="text-lg font-semibold mb-3">Executive lounge access, Guest room, 1 King, Panoramic City view</p>
+                                        <p class="text-sm">Executive Room King, 1 King, 45sqm/484sqft, Living/sitting area, Wireless internet, complimentary, Coffee/tea maker</p>
+                                    </div>
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Special Benefits</h2>
+                                            <p class="text-sm" style="line-height:2.5"> This room features Executive lounge access <br> Private access floor<br>Complimentary food<br>High-speed Wi-Fi<br>Complimentary cocktails<br>Complimentary non-alcoholic beverages<br>Business services, for a fee</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Room Features</h2>
+                                            <p class="text-sm" style="line-height:2.5">45sqm/484sqft<br>Air-conditioned<br>This room is non-smoking<br>Connecting rooms are available (for some rooms)<br>Living/sitting area<br>Windows, floor-to-ceiling</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Bath and Bathroom Features</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Separate bathtub and shower<br>Hair dryer<br>Robe<br>Slippers</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Beds and Bedding</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Maximum occupancy: 3<br>1 King<br>Rollaway beds permitted: 1<br>Cribs permitted: 1<br>Maximum cribs/rollaway beds permitted: 1<br>Duvet</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Furniture and Furnishings</h2>
+                                            <p class="text-sm" style="line-height:2.5">Sofa<br> Alarm clock <br>Safe, in room<br>Dual voltage outlets<br>Desk, electrical outlet<br>Iron and ironing board</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Food and Beverages</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Room service, 24-hour <br>Bottled water, complimentary <br> Coffee/tea maker<br> Minibar, for a fee</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Hospitality Services</h2>
+                                            <p class="text-sm" style="line-height:2.5">Evening turndown service<br>Newspaper delivered to room, on request</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Entertainment</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Plug-in, high-tech room <br>Premium movie channels <br>Cable/satellite <br>International cable/satellite <br>CNN, ESPN, and HBO <br>Movies, pay-per-view</p>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
                             `;
                             break;
                         case 'Executive Twin':
                             overlayContent.innerHTML = `
-                                <h2 class="text-2xl font-bold mb-4">Executive Twin</h2>
-                                <p>Perfect for friends or family, this room features two twin beds and access to the executive lounge.</p>
+                                <div class="overlay-card-header sticky top-10">
+                                    <h2 class="text-xl p-4 ml-3 text-left">Executive Twin</h2>
+                                </div>
+                                
+                                <div class="overlay-description overflow-y-auto max-h-[80vh]">
+                                    <img src="img/executivetwin.webp" class="w-full object-cover mb-4" alt="Executive King Room"> <!-- Gambar fit -->
+
+                                    <div class="overlay-headdescription p-3 ml-6 mb-3">
+                                        <p class="text-lg font-semibold mb-3">Executive lounge access, Guest room, 2 Twin, Panoramic City view</p>
+                                        <p class="text-sm">Executive Room Twin, 2 Twin, 45sqm/484sqft, Wireless internet, complimentary, Coffee/tea maker</p>
+                                    </div>
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Special Benefits</h2>
+                                            <p class="text-sm" style="line-height:2.5"> This room features Executive lounge access <br> Private access floor<br>Complimentary food<br>High-speed Wi-Fi<br>Complimentary cocktails<br>Complimentary non-alcoholic beverages<br>Business services, for a fee</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Room Features</h2>
+                                            <p class="text-sm" style="line-height:2.5">45sqm/484sqft<br>Air-conditioned<br>This room is non-smoking<br>Connecting rooms are available (for some rooms)<br>Windows, floor-to-ceiling</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Bath and Bathroom Features</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Separate bathtub and shower<br>Hair dryer<br>Robe<br>Slippers</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Beds and Bedding</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Maximum occupancy: 3<br>2 Twin <br> Rollaway beds permitted: 1<br>Cribs permitted: 1<br>Maximum cribs/rollaway beds permitted: 1<br>Duvet</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Furniture and Furnishings</h2>
+                                            <p class="text-sm" style="line-height:2.5">Sofa<br> Alarm clock <br>Safe, in room<br>Dual voltage outlets<br>Desk, writing/work, electrical outlet<br>Iron and ironing board</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Food and Beverages</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Room service, 24-hour <br>Bottled water, complimentary <br> Coffee/tea maker<br> Minibar, for a fee</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Hospitality Services</h2>
+                                            <p class="text-sm" style="line-height:2.5">Evening turndown service<br>Newspaper delivered to room, on request</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Entertainment</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Plug-in, high-tech room <br>Premium movie channels <br>Cable/satellite <br>International cable/satellite <br>CNN, ESPN, and HBO <br>Movies, pay-per-view</p>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
                             `;
                             break;
+                            
                         case 'Executive Deluxe King':
                             overlayContent.innerHTML = `
-                                <h2 class="text-2xl font-bold mb-4">Executive Deluxe King</h2>
-                                <p>Spacious and luxurious, this room offers a king-sized bed with panoramic city views.</p>
+                                <div class="overlay-card-header sticky top-10">
+                                    <h2 class="text-xl p-4 ml-3 text-left">Executive Deluxe King</h2> <!-- Judul kamar -->      
+                                </div>
+                                
+                                <div class="overlay-description overflow-y-auto max-h-[80vh]">
+                                    <img src="img/exedeluxeking.webp" class="w-full object-cover mb-4" alt="Executive King Room"> <!-- Gambar fit -->
+
+                                    <div class="overlay-headdescription p-3 ml-6 mb-3">
+                                        <p class="text-lg font-semibold mb-3">Executive lounge access, Larger Guest room, 1 King, Panoramic City view</p>
+                                        <p class="text-sm">Executive Deluxe Room King, 1 King, 65sqm/699sqft, Living/sitting area, Wireless internet, complimentary, Coffee/tea maker</p>
+                                    </div>
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Special Benefits</h2>
+                                            <p class="text-sm" style="line-height:2.5"> This room features Executive lounge access <br> Private access floor<br>Complimentary food: <br> Hors d'oeuvres<br>High-speed Wi-Fi<br>Complimentary cocktails<br>Complimentary non-alcoholic beverages<br>Business services, for a fee</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Room Features</h2>
+                                            <p class="text-sm" style="line-height:2.5">65sqm/699sqft<br>Air-conditioned<br>This room is non-smoking<br>Connecting rooms are available (for some rooms)<br>Living/sitting area<br>Windows, floor-to-ceiling</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Bath and Bathroom Features</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Separate bathtub and shower<br>Hair dryer<br>Robe<br>Slippers</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Beds and Bedding</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Maximum occupancy: 3<br>1 King<br>Rollaway beds permitted: 1<br>Cribs permitted: 1<br>Maximum cribs/rollaway beds permitted: 1<br>Duvet</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Furniture and Furnishings</h2>
+                                            <p class="text-sm" style="line-height:2.5">Chair<br> Alarm clock <br>Safe, in room<br>Dual voltage outlets<br>Desk, writing/work, electrical outlet<br>Iron and ironing board</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Food and Beverages</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Room service, 24-hour <br>Bottled water, complimentary <br> Coffee/tea maker<br> Minibar, for a fee</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Hospitality Services</h2>
+                                            <p class="text-sm" style="line-height:2.5">Evening turndown service<br>Newspaper delivered to room, on request</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Entertainment</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Plug-in, high-tech room <br>Premium movie channels <br>Cable/satellite <br>International cable/satellite <br>CNN, ESPN, and HBO <br>Movies, pay-per-view</p>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
                             `;
                             break;
                         case 'Junior Suite':
                             overlayContent.innerHTML = `
-                                <h2 class="text-2xl font-bold mb-4">Junior Suite</h2>
-                                <p>Relax in style with this suite featuring executive lounge access and stunning city views.</p>
+                                <div class="overlay-card-header sticky top-10">
+                                    <h2 class="text-xl p-4 ml-3 text-left">Junior Suite</h2> <!-- Judul kamar -->      
+                                </div>
+                                
+                                <div class="overlay-description overflow-y-auto max-h-[80vh]">
+                                    <img src="img/juniorsuite.avif" class="w-full object-cover mb-4" alt="Executive King Room"> <!-- Gambar fit -->
+
+                                    <div class="overlay-headdescription p-3 ml-6 mb-3">
+                                        <p class="text-lg font-semibold mb-3">Executive lounge access, Junior Suite, 1 King, Panoramic City view</p>
+                                        <p class="text-sm">Junior Suite King, 1 King, 90sqm/968sqft, Living/sitting area, Dining area, Separate living room, Wireless internet, complimentary, Coffee/tea maker</p>
+                                    </div>
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Special Benefits</h2>
+                                            <p class="text-sm" style="line-height:2.5"> This room features Executive lounge access <br> Private access floor<br>Complimentary food: <br> Hors d'oeuvres<br>High-speed Wi-Fi<br>Complimentary cocktails<br>Complimentary non-alcoholic beverages<br>Business services, for a fee <br> Complimentary pressing, 2 garments per stay</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Room Features</h2>
+                                            <p class="text-sm" style="line-height:2.5">90sqm/968sqft<br>Air-conditioned<br>This room is non-smoking<br>Connecting rooms are not available<br>Living/sitting area<br>Dining area <br>Separate living room<br>Windows, floor-to-ceiling</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Bath and Bathroom Features</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Separate bathtub and shower<br>Hair dryer<br>Robe<br>Slippers</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Beds and Bedding</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Maximum occupancy: 3<br>1 King<br>Rollaway beds permitted: 1<br>Cribs permitted: 1<br>Maximum cribs/rollaway beds permitted: 1<br>Duvet</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Furniture and Furnishings</h2>
+                                            <p class="text-sm" style="line-height:2.5">Sofa<br>Chair<br> Alarm clock <br>Safe, in room<br>Dual voltage outlets<br>Table, seats 4 <br>Desk, electrical outlet<br>Iron and ironing board</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Food and Beverages</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Room service, 24-hour <br>Bottled water, complimentary <br> Coffee/tea maker<br> Minibar, for a fee</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Hospitality Services</h2>
+                                            <p class="text-sm" style="line-height:2.5">Evening turndown service<br>Newspaper delivered to room, on request</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Entertainment</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Plug-in, high-tech room <br>Premium movie channels <br>Cable/satellite <br>International cable/satellite <br>CNN, ESPN, and HBO <br>Movies, pay-per-view</p>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
                             `;
                             break;
                         case 'Ambassador Suite':
                             overlayContent.innerHTML = `
-                                <h2 class="text-2xl font-bold mb-4">Ambassador Suite</h2>
-                                <p>Experience unparalleled luxury in this larger suite with a king bed and panoramic views.</p>
+                                <div class="overlay-card-header sticky top-10">
+                                    <h2 class="text-xl p-4 ml-3 text-left">Ambassador Suite</h2> <!-- Judul kamar -->      
+                                </div>
+                                
+                                <div class="overlay-description overflow-y-auto max-h-[80vh]">
+                                    <img src="img/ambassadorsuite.avif" class="w-full object-cover mb-4" alt="Executive King Room"> <!-- Gambar fit -->
+
+                                    <div class="overlay-headdescription p-3 ml-6 mb-3">
+                                        <p class="text-lg font-semibold mb-3">Executive lounge access, Larger Suite, 1 King, Panoramic City view</p>
+                                        <p class="text-sm">Ambassador Suite King, 1 King, Bathrooms: 2, 125sqm/1345sqft, Living/sitting area, Dining area, Separate dining room, Separate living room, Wireless internet, complimentary, Coffee/tea maker</p>
+                                    </div>
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Special Benefits</h2>
+                                            <p class="text-sm" style="line-height:2.5"> This room features Executive lounge access <br> Private access floor<br>Complimentary food: <br> Hors d'oeuvres<br>High-speed Wi-Fi<br>Complimentary cocktails<br>Complimentary non-alcoholic beverages<br>Business services, for a fee <br> Complimentary pressing, 2 garments per stay</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Room Features</h2>
+                                            <p class="text-sm" style="line-height:2.5">125sqm/1345sqft<br>Air-conditioned<br>This room is non-smoking<br>Connecting rooms are available (for some rooms)<br>Living/sitting area<br>Dining area <br>Separate dining room<br>Separate living room<br>Study<br>Windows, floor-to-ceiling<br> Separate kitchen: <br>Pantry area, refrigerator</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Bath and Bathroom Features</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Bathrooms: 2<br>Separate bathtub and shower<br>Hair dryer<br>Robe<br>Slippers</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Beds and Bedding</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Maximum occupancy: 3<br>1 King<br>Rollaway beds permitted: 1<br>Cribs permitted: 1<br>Maximum cribs/rollaway beds permitted: 1<br>Duvet</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Furniture and Furnishings</h2>
+                                            <p class="text-sm" style="line-height:2.5">Sofa<br>Chair<br>Alarm clock <br>Safe, in room<br>Dual voltage outlets<br>Table, seats 6<br>Desk, writing/work, electrical outlet<br>Iron and ironing board</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Food and Beverages</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Room service, 24-hour <br>Bottled water, complimentary <br> Coffee/tea maker<br> Minibar, for a fee</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Hospitality Services</h2>
+                                            <p class="text-sm" style="line-height:2.5">Evening turndown service<br>Newspaper delivered to room, on request</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Entertainment</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Plug-in, high-tech room <br>Premium movie channels <br>Cable/satellite <br>International cable/satellite <br>CNN, ESPN, and HBO <br>Movies, pay-per-view</p>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
                             `;
                             break;
                         case 'Presidential Suite':
                             overlayContent.innerHTML = `
-                                <h2 class="text-2xl font-bold mb-4">Presidential Suite</h2>
-                                <p>The ultimate in luxury, this suite offers a king bed, executive lounge access, and breathtaking views.</p>
+                                <div class="overlay-card-header sticky top-10">
+                                    <h2 class="text-xl p-4 ml-3 text-left">Presidential Suite</h2> <!-- Judul kamar -->      
+                                </div>
+                                
+                                <div class="overlay-description overflow-y-auto max-h-[80vh]">
+                                    <img src="img/presidentialsuite.webp" class="w-full object-cover mb-4" alt="Executive King Room"> <!-- Gambar fit -->
+
+                                    <div class="overlay-headdescription p-3 ml-6 mb-3">
+                                        <p class="text-lg font-semibold mb-3">Executive lounge access, Presidential Suite, 1 King, Panoramic City view</p>
+                                        <p class="text-sm">Presidential Suite King, 1 King, Bathrooms: 2, 200sqm/2152sqft, Living/sitting area, Dining area, Separate dining room, Separate living room, Wireless internet, complimentary, Coffee/tea maker</p>
+                                    </div>
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Special Benefits</h2>
+                                            <p class="text-sm" style="line-height:2.5"> This room features Executive lounge access <br> Private access floor<br>Complimentary food: <br> Hors d'oeuvres<br>High-speed Wi-Fi<br>Complimentary cocktails<br>Complimentary non-alcoholic beverages<br>Business services, for a fee <br> Complimentary pressing, 2 garments per stay</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Room Features</h2>
+                                            <p class="text-sm" style="line-height:2.5">200sqm/2152sqft<br>Air-conditioned<br>This room is non-smoking<br>Connecting rooms are available (for some rooms)<br>Living/sitting area<br>Dining area <br>Separate dining room<br>Separate living room<br>Study<br>Windows, floor-to-ceiling<br> Separate kitchen: <br>Pantry area, refrigerator</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Bath and Bathroom Features</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Bathrooms: 2<br>Separate bathtub and shower<br>Hair dryer<br>Robe<br>Slippers</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Beds and Bedding</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Maximum occupancy: 3<br>1 King<br>Rollaway beds permitted: 1<br>Cribs permitted: 1<br>Maximum cribs/rollaway beds permitted: 1<br>Duvet</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Furniture and Furnishings</h2>
+                                            <p class="text-sm" style="line-height:2.5">Sofa<br>Chair<br>Alarm clock <br>Safe, in room<br>Dual voltage outlets<br>Table, seats 6<br>Desk, writing/work, electrical outlet<br>Iron and ironing board</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Food and Beverages</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Room service, 24-hour <br>Bottled water, complimentary <br> Coffee/tea maker<br> Minibar, for a fee</p>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height: 0.5px; width: 93%; background-color: #000; border: none; margin: 0 auto;">
+
+                                    <div class="overlay-card-description p-3 ml-8 mt-3">
+                                        <div class = "overlay-card-description-left mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Hospitality Services</h2>
+                                            <p class="text-sm" style="line-height:2.5">Evening turndown service<br>Newspaper delivered to room, on request</p>
+                                        </div>
+                                        <div class = "overlay-card-description-right mb-3" style="width:50%">
+                                            <h2 class="font-semibold mb-3">Entertainment</h2>
+                                            <p class="text-sm" style="line-height:2.5"> Plug-in, high-tech room <br>Premium movie channels <br>Cable/satellite <br>International cable/satellite <br>CNN, ESPN, and HBO <br>Movies, pay-per-view</p>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
                             `;
                             break;
                         default:
@@ -341,11 +735,13 @@
                     }
 
                     document.getElementById('overlay').classList.remove('hidden');
+                    document.body.classList.add('no-scroll'); // Tambahkan kelas untuk mencegah scroll pada body
                 });
             });
 
             document.getElementById('closeOverlay').addEventListener('click', function () {
                 document.getElementById('overlay').classList.add('hidden');
+                document.body.classList.remove('no-scroll'); // Hapus kelas untuk mengembalikan scroll pada body
             });
 
         </script>
