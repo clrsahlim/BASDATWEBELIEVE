@@ -7,8 +7,7 @@
     <title>Manajemen Hotel</title>
 </head>
 <body class="flex flex-col h-screen">
-    <body class="flex flex-col h-screen">
-        <nav class="bg-cream p-5 flex items-center justify-between">
+        <nav class="bg-cream p-3 md:p-5 flex items-center justify-between w-full">
             <button id="tombolSidebar">
                 <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
             </button>
@@ -56,7 +55,209 @@
             </div>
 
             <div class="flex-1 p-10">
-                <h1 class="text-5xl">halo</h1>
+                <label class="relative block">
+                    <span class="sr-only">Search</span>
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                      <img class="h-5 w-5 " viewBox="0 0 20 20" src="img/IconSeacrh.png"></img>
+                    </span>
+                    <input class="placeholder:font-bold placeholder:text-coklat placeholder:text-opacity-50 block bg-white w-full border border-coklat rounded-2xl py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-coklat focus:ring-coklat focus:ring-1" placeholder="Search reservations..." type="text" name="search"/>
+                </label>
+
+                <div class="md:grid md:grid-cols-2 md:gap-6">
+
+                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
+                        <div class="flex items-center gap-5 pb-5">
+                            <p class="font-bold underline underline-offset-3">Reservation Details</p>
+                            <button class="outline outline-merah bg-merah rounded-full text-boneWhite px-3 text-xs font-semibold">
+                                Down-Payment
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Name</span>
+                                <span>: </span>
+                                <span class="ml-4">James Potter</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Reservation ID</span>
+                                <span>: </span>
+                                <span class="ml-4">021345</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Room Type</span>
+                                <span>: </span>
+                                <span class="ml-4">Family Room</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Total Nights</span>
+                                <span>: </span>
+                                <span class="ml-4">3</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Check-In</span>
+                                <span>: </span>
+                                <span class="ml-4">26 November 2024</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Check-Out</span>
+                                <span>: </span>
+                                <span class="ml-4">29 November 2024</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Total Charges</span>
+                                <span>: </span>
+                                <span class="ml-4">Rp4.500.000</span>
+                            </div>
+                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
+                        </div>
+
+                    </div>
+
+                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
+                        <div class="flex items-center gap-5 pb-5">
+                            <p class="font-bold underline underline-offset-3">Reservation Details</p>
+                            <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
+                                Paid
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Name</span>
+                                <span>: </span>
+                                <span class="ml-4">Sirius Black</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Reservation ID</span>
+                                <span>: </span>
+                                <span class="ml-4">201030</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Room Type</span>
+                                <span>: </span>
+                                <span class="ml-4">Sigle Room</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Total Nights</span>
+                                <span>: </span>
+                                <span class="ml-4">1</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Check-In</span>
+                                <span>: </span>
+                                <span class="ml-4">26 November 2024</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Check-Out</span>
+                                <span>: </span>
+                                <span class="ml-4">27 November 2024</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Total Charges</span>
+                                <span>: </span>
+                                <span class="ml-4">Rp1.500.000</span>
+                            </div>
+                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
+                        </div>
+                    </div>
+
+                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
+                        <div class="flex items-center gap-5 pb-5">
+                            <p class="font-bold underline underline-offset-3">Reservation Details</p>
+                            <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
+                                Paid
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Name</span>
+                                <span>: </span>
+                                <span class="ml-4">Sirius White</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Reservation ID</span>
+                                <span>: </span>
+                                <span class="ml-4">220819</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Room Type</span>
+                                <span>: </span>
+                                <span class="ml-4">Sigle Room</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Total Nights</span>
+                                <span>: </span>
+                                <span class="ml-4">1</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Check-In</span>
+                                <span>: </span>
+                                <span class="ml-4">26 November 2024</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Check-Out</span>
+                                <span>: </span>
+                                <span class="ml-4">27 November 2024</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Total Charges</span>
+                                <span>: </span>
+                                <span class="ml-4">Rp1.500.000</span>
+                            </div>
+                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
+                        </div>
+                    </div>
+
+                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
+                        <div class="flex items-center gap-5 pb-5">
+                            <p class="font-bold underline underline-offset-3">Reservation Details</p>
+                            <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
+                                Paid
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col space-y-2">
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Name</span>
+                                <span>: </span>
+                                <span class="ml-4">Lucius Malfoy</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Reservation ID</span>
+                                <span>: </span>
+                                <span class="ml-4">231107</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Room Type</span>
+                                <span>: </span>
+                                <span class="ml-4">Executive Deluxe king</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Total Nights</span>
+                                <span>: </span>
+                                <span class="ml-4">3</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Check-In</span>
+                                <span>: </span>
+                                <span class="ml-4">26 November 2024</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Check-Out</span>
+                                <span>: </span>
+                                <span class="ml-4">29 November 2024</span>
+                            </div>
+                            <div class="flex">
+                                <span class="w-32 font-semibold">Total Charges</span>
+                                <span>: </span>
+                                <span class="ml-4">Rp4.500.000</span>
+                            </div>
+                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
