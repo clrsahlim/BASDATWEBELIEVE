@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900" rel="stylesheet">
     <title>Manajemen Hotel</title>
     <style>
         body {
@@ -149,15 +149,32 @@
             gap: 50px;
         }
 
+        #timeDisplay {
+        min-width: 150px; 
+        text-align: center;
+        background-color: transparent;
+        color: rgb(108, 78, 49); 
+        border: 2px solid rgb(108, 78, 49); 
+        border-radius: 1.5rem; 
+        padding: 0.5rem 1rem; 
+        font-weight: 600; 
+        font-size: 0.875rem; 
+        white-space: nowrap; 
+    }
+
     </style>
 </head>
 <body class="flex flex-col h-screen">
-        <nav class="bg-cream p-5 flex items-center justify-between">
-            <button id="tombolSidebar">
-                <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
-            </button>
-            <h1 class="text-3xl font-audiowide text-center flex-grow">DASHBOARD</h1>
-        </nav>
+    <nav class="bg-cream p-5 flex items-center justify-between relative">
+        <button id="tombolSidebar">
+            <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
+        </button>
+        <h1 class="text-3xl font-audiowide absolute inset-0 flex justify-center items-center pointer-events-none">DASHBOARD</h1>
+        <div class="flex items-center space-x-4">
+            <div id="timeDisplay" class="bg-gray-200 px-3 py-1" style="margin-right: 1rem;"></div>
+            <img id="userIcon" class="h-8 w-8 rounded-full" src="img/aaa.png" alt="User Icon">
+        </div>
+    </nav>
     
         <div class="flex flex-1">
             <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">

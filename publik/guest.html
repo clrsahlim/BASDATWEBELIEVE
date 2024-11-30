@@ -110,16 +110,33 @@
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
             border-radius: 20px;
         }
+
+        #timeDisplay {
+        min-width: 150px; 
+        text-align: center;
+        background-color: transparent;
+        color: rgb(108, 78, 49); 
+        border: 2px solid rgb(108, 78, 49); 
+        border-radius: 1.5rem; 
+        padding: 0.5rem 1rem; 
+        font-weight: 600; 
+        font-size: 0.875rem; 
+        white-space: nowrap; 
+        }
 </style>
 </head>
 
 <body class="flex flex-col h-screen">
     <body class="flex flex-col h-screen">
-        <nav class="bg-cream p-5 flex items-center justify-between">
+        <nav class="bg-cream p-5 flex items-center justify-between relative">
             <button id="tombolSidebar">
                 <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
             </button>
-            <h1 class="text-3xl font-audiowide text-center flex-grow">GUEST DATABASE</h1>
+            <h1 class="text-3xl font-audiowide absolute inset-0 flex justify-center items-center" style="pointer-events: none;">GUEST DATABASE</h1>
+            <div class="flex items-center space-x-4">
+                <div id="timeDisplay" class="bg-gray-200 px-3 py-1" style="margin-right: 1rem;"></div>
+                <img id="userIcon" class="h-8 w-8 rounded-full" src="img/aaa.png" alt="User Icon">
+            </div>
         </nav>
     
         <div class="flex flex-1">
