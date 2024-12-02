@@ -103,20 +103,20 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     <li class="flex items-center mb-8 mr-2 gap-2">
                         <img class="h-5" src="img/in.png" alt="">
-                        <a href="checkin.html" class="font-audiowide text-xs md:text-xl underline underline-offset-4">CHECK IN</a>
+                        <a href="checkin.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">CHECK IN</a>
                     </li>
 
                     <li class="flex items-center mb-8 mr-2 gap-2">
                         <img class="h-5" src="img/out.png" alt="">
-                        <a href="checkout.html" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
+                        <a href="checkout.php" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
                     </li>
                     <li class="flex items-center mb-8 mr-2 gap-2">
                         <img class="h-5" src="img/payment.png" alt="">
-                        <a href="prepayment.html" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
+                        <a href="prepayment.php" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
                     </li>
                     <li class="flex items-center mb-8 mr-2 gap-2">
                         <img class="h-5" src="img/payment.png" alt="">
-                        <a href="payment.html" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
+                        <a href="payment.php" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
                     </li>
                 </ul>
             </div>
