@@ -83,17 +83,17 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <ul>
                     <li class="flex items-center mb-8 mr-2 gap-2 mt-5">
                         <img class="h-5" src="img/dashboard.png" alt="">
-                        <a href="dasboard.html" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
+                        <a href="dasboard.php" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
                     </li>
 
                     <li class="flex items-center mb-8 mr-2 gap-2">
                         <img class="h-5" src="img/room.png" alt="">
-                        <a href="room.html" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+                        <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
                     </li>
 
                     <li class="flex items-center mb-8 mr-2 gap-2">
                         <img class="h-5" src="img/guest.png" alt="">
-                        <a href="guest.html" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
+                        <a href="guest.php" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
                     </li>
 
                     <li class="flex items-center mb-8 mr-2 gap-2">
