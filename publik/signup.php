@@ -5,23 +5,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Validate input
+    // Validasi input
     if (empty($email) || empty($password)) {
         die('Please fill in all fields.');
     }
 
-    try 
+    try {
+        // Hash password menggunakan bcrypt
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
+        // Query untuk insert ke database
         $sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
-        $stmt = $conn->prepare($sql); 
+        $stmt = $conn->prepare($sql);
         $stmt->execute([
             ':email' => $email,
             ':password' => $hashedPassword
         ]);
 
+        // Redirect ke halaman login setelah berhasil
         header('Location: login.php');
+        exit(); // Pastikan tidak ada eksekusi kode lebih lanjut
+
     } catch (PDOException $e) {
+        // Menangani error, cek untuk kode error duplikat entri (PostgreSQL error 23505)
         if ($e->getCode() == '23505') { 
             echo "Email already exists. Please use a different email.";
         } else {
@@ -30,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
