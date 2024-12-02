@@ -1,5 +1,17 @@
 <?php
+session_start();
 include 'database.php';
+if (!isset($_SESSION['user_id'])) {
+    // Pengguna belum login
+    header('Location: login.php');
+    exit;
+}
+
+if ($_SESSION['role'] != 'admin') {
+    // Hanya admin yang bisa mengakses halaman ini
+    header('Location: dasboard.php');
+    exit;
+}
 
 $query = "
     SELECT 
@@ -110,6 +122,7 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="flex-1 p-10">
+
                 <label class="relative block">
                     <span class="sr-only">Search</span>
                     <span class="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -128,9 +141,11 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $isCheckedIn = !empty($reservation['checkin_reservation_id']);
                 ?>
 
+
                     <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
                         <div class="flex items-center gap-5 pb-5">
                             <p class="font-bold underline underline-offset-3">Reservation Details</p>
+
                             <button class="outline <?= $reservation['status_prepayment'] ? 'outline-green-500 bg-green-500' : 'outline-merah bg-merah' ?> rounded-full text-boneWhite px-3 text-xs font-semibold">
                                 <?= $reservation['status_prepayment'] ? 'Paid' : 'Down-Payment' ?>
                             </button>
@@ -140,36 +155,47 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="flex">
                                 <span class="w-32 font-semibold">Name</span>
                                 <span>: </span>
+
                                 <span class="ml-4"><?= htmlspecialchars($reservation['nama_tamu']) ?></span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Reservation ID</span>
                                 <span>: </span>
+
                                 <span class="ml-4"><?= htmlspecialchars($reservation['id_reservasi']) ?></span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Room Type</span>
                                 <span>: </span>
+
                                 <span class="ml-4"><?= htmlspecialchars($reservation['tipe_kamar']) ?></span>
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold"><?= $totalNights ?></span>
                                 <span>: </span>
                                 <span class="ml-4">3</span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Check-In</span>
                                 <span>: </span>
+
                                 <span class="ml-4"><?= htmlspecialchars($reservation['tanggal_checkin']) ?></span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Check-Out</span>
                                 <span>: </span>
+
                                 <span class="ml-4"><?= htmlspecialchars($reservation['tanggal_checkout']) ?></span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Total Charges</span>
                                 <span>: </span>
+
                                 <span class="ml-4">Rp<?= number_format($reservation['total_charge'], 0, ',', '.') ?></span>
                             </div>
 
