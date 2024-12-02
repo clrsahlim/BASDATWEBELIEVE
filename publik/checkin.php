@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+include 'database.php';
 if (!isset($_SESSION['user_id'])) {
     // Pengguna belum login
     header('Location: login.php');
@@ -12,6 +12,29 @@ if ($_SESSION['role'] != 'admin') {
     header('Location: dasboard.php');
     exit;
 }
+
+$query = "
+    SELECT 
+        r.nama_tamu, 
+        r.id_reservasi, 
+        r.tipe_kamar, 
+        r.tanggal_checkin, 
+        r.tanggal_checkout, 
+        p.id_prepayment,
+        p.status_prepayment, 
+        p.total_charge,
+        c.id_reservasi AS checkin_reservation_id 
+    FROM 
+        reservation r 
+    JOIN 
+        prepayment p ON r.id_reservasi = p.id_reservasi
+    LEFT JOIN 
+        check_in c ON r.id_reservasi = c.id_reservasi
+";
+
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -55,68 +78,51 @@ if ($_SESSION['role'] != 'admin') {
         </div>
     </nav>
     
-    <div class="flex flex-1">
-    <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
-        <ul>
-            <!-- Dashboard -->
-            <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
-                <img class="h-5" src="img/dashboard.png" alt="">
-                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">DASHBOARD</a>
-            </li>
+        <div class="flex flex-1">
+            <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
+                <ul>
+                    <li class="flex items-center mb-8 mr-2 gap-2 mt-5">
+                        <img class="h-5" src="img/dashboard.png" alt="">
+                        <a href="dasboard.html" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
+                    </li>
 
-            <!-- Room Management (Accessible for both admin and user) -->
-            <li class="flex items-center mb-8 mr-2 gap-2">
-                <img class="h-5" src="img/room.png" alt="">
-                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
-            </li>
+                    <li class="flex items-center mb-8 mr-2 gap-2">
+                        <img class="h-5" src="img/room.png" alt="">
+                        <a href="room.html" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+                    </li>
 
-            <!-- Guest Database (Only for admin) -->
-            <?php if ($_SESSION['role'] == 'admin') { ?>
-                <li class="flex items-center mb-8 mr-2 gap-2">
-                    <img class="h-5" src="img/guest.png" alt="">
-                    <a href="guest.php" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
-                </li>
-            <?php } ?>
+                    <li class="flex items-center mb-8 mr-2 gap-2">
+                        <img class="h-5" src="img/guest.png" alt="">
+                        <a href="guest.html" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
+                    </li>
 
-            <!-- Reservation (Accessible for both admin and user) -->
-            <li class="flex items-center mb-8 mr-2 gap-2">
-                <img class="h-5" src="img/reserv.png" alt="">
-                <a href="reservasi.php" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
-            </li>
+                    <li class="flex items-center mb-8 mr-2 gap-2">
+                        <img class="h-5" src="img/reserv.png" alt="">
+                        <a href="reservasi.php" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
+                    </li>
 
-            <!-- Check-In (Only for admin) -->
-            <?php if ($_SESSION['role'] == 'admin') { ?>
-                <li class="flex items-center mb-8 mr-2 gap-2">
-                    <img class="h-5" src="img/in.png" alt="">
-                    <a href="checkin.php" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
-                </li>
-            <?php } ?>
+                    <li class="flex items-center mb-8 mr-2 gap-2">
+                        <img class="h-5" src="img/in.png" alt="">
+                        <a href="checkin.html" class="font-audiowide text-xs md:text-xl underline underline-offset-4">CHECK IN</a>
+                    </li>
 
-            <!-- Check-Out (Only for admin) -->
-            <?php if ($_SESSION['role'] == 'admin') { ?>
-                <li class="flex items-center mb-8 mr-2 gap-2">
-                    <img class="h-5" src="img/out.png" alt="">
-                    <a href="checkout.php" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
-                </li>
-            <?php } ?>
+                    <li class="flex items-center mb-8 mr-2 gap-2">
+                        <img class="h-5" src="img/out.png" alt="">
+                        <a href="checkout.html" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
+                    </li>
+                    <li class="flex items-center mb-8 mr-2 gap-2">
+                        <img class="h-5" src="img/payment.png" alt="">
+                        <a href="prepayment.html" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
+                    </li>
+                    <li class="flex items-center mb-8 mr-2 gap-2">
+                        <img class="h-5" src="img/payment.png" alt="">
+                        <a href="payment.html" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
+                    </li>
+                </ul>
+            </div>
 
-            <?php if (isset($_SESSION['role'])) { ?>
-    <li class="flex items-center mb-8 mr-2 gap-2">
-        <img class="h-5" src="img/payment.png" alt="">
-        <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
-    </li>
-<?php } ?>
+            <div class="flex-1 p-10">
 
-            <!-- Payment (Only for admin) -->
-            <?php if ($_SESSION['role'] == 'admin') { ?>
-                <li class="flex items-center mb-8 mr-2 gap-2">
-                    <img class="h-5" src="img/payment.png" alt="">
-                    <a href="payment.php" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
-                </li>
-            <?php } ?>
-        </ul>
-    </div>
-    <div class="flex-1 p-10">
                 <label class="relative block">
                     <span class="sr-only">Search</span>
                     <span class="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -127,11 +133,21 @@ if ($_SESSION['role'] != 'admin') {
 
                 <div class="md:grid md:grid-cols-2 md:gap-6">
 
+                <?php foreach ($reservations as $reservation): 
+                    $checkinDate = new DateTime($reservation['tanggal_checkin']);
+                    $checkoutDate = new DateTime($reservation['tanggal_checkout']);
+                    $totalNights = $checkoutDate->diff($checkinDate)->days;
+
+                    $isCheckedIn = !empty($reservation['checkin_reservation_id']);
+                ?>
+
+
                     <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
                         <div class="flex items-center gap-5 pb-5">
                             <p class="font-bold underline underline-offset-3">Reservation Details</p>
-                            <button class="outline outline-merah bg-merah rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                Down-Payment
+
+                            <button class="outline <?= $reservation['status_prepayment'] ? 'outline-green-500 bg-green-500' : 'outline-merah bg-merah' ?> rounded-full text-boneWhite px-3 text-xs font-semibold">
+                                <?= $reservation['status_prepayment'] ? 'Paid' : 'Down-Payment' ?>
                             </button>
                     </div>
 
@@ -139,191 +155,68 @@ if ($_SESSION['role'] != 'admin') {
                             <div class="flex">
                                 <span class="w-32 font-semibold">Name</span>
                                 <span>: </span>
-                                <span class="ml-4">James Potter</span>
+
+                                <span class="ml-4"><?= htmlspecialchars($reservation['nama_tamu']) ?></span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Reservation ID</span>
                                 <span>: </span>
-                                <span class="ml-4">021345</span>
+
+                                <span class="ml-4"><?= htmlspecialchars($reservation['id_reservasi']) ?></span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Room Type</span>
                                 <span>: </span>
-                                <span class="ml-4">Family Room</span>
+
+                                <span class="ml-4"><?= htmlspecialchars($reservation['tipe_kamar']) ?></span>
                             </div>
                             <div class="flex">
-                                <span class="w-32 font-semibold">Total Nights</span>
+                                <span class="w-32 font-semibold"><?= $totalNights ?></span>
                                 <span>: </span>
                                 <span class="ml-4">3</span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Check-In</span>
                                 <span>: </span>
-                                <span class="ml-4">26 November 2024</span>
+
+                                <span class="ml-4"><?= htmlspecialchars($reservation['tanggal_checkin']) ?></span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Check-Out</span>
                                 <span>: </span>
-                                <span class="ml-4">29 November 2024</span>
+
+                                <span class="ml-4"><?= htmlspecialchars($reservation['tanggal_checkout']) ?></span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Total Charges</span>
                                 <span>: </span>
-                                <span class="ml-4">Rp4.500.000</span>
+
+                                <span class="ml-4">Rp<?= number_format($reservation['total_charge'], 0, ',', '.') ?></span>
                             </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
+
+                            <?php 
+                                if ($reservation['status_prepayment'] && !$isCheckedIn):  ?>
+                                <form action="datacheckin.php" method="POST">
+                                <input type="hidden" name="id_reservasi" value="<?= htmlspecialchars($reservation['id_reservasi']) ?>">
+                                <input type="hidden" name="id_prepayment" value="<?= htmlspecialchars($reservation['id_prepayment'] ?? '') ?>">
+                                <button type="submit" class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
+                                </form>
+                            <?php else: ?>
+                                <button class="outline outline-merah bg-merah text-boneWhite rounded-full cursor-not-allowed" disabled>Check-In</button>
+                            <?php endif; ?>
                         </div>
 
                     </div>
+                <?php endforeach; ?>
 
-                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
-                        <div class="flex items-center gap-5 pb-5">
-                            <p class="font-bold underline underline-offset-3">Reservation Details</p>
-                            <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                Paid
-                            </button>
-                        </div>
-
-                        <div class="flex flex-col space-y-2">
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Name</span>
-                                <span>: </span>
-                                <span class="ml-4">Sirius Black</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Reservation ID</span>
-                                <span>: </span>
-                                <span class="ml-4">201030</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Room Type</span>
-                                <span>: </span>
-                                <span class="ml-4">Sigle Room</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Total Nights</span>
-                                <span>: </span>
-                                <span class="ml-4">1</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Check-In</span>
-                                <span>: </span>
-                                <span class="ml-4">26 November 2024</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Check-Out</span>
-                                <span>: </span>
-                                <span class="ml-4">27 November 2024</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Total Charges</span>
-                                <span>: </span>
-                                <span class="ml-4">Rp1.500.000</span>
-                            </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
-                        </div>
-                    </div>
-
-                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
-                        <div class="flex items-center gap-5 pb-5">
-                            <p class="font-bold underline underline-offset-3">Reservation Details</p>
-                            <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                Paid
-                            </button>
-                        </div>
-
-                        <div class="flex flex-col space-y-2">
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Name</span>
-                                <span>: </span>
-                                <span class="ml-4">Sirius White</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Reservation ID</span>
-                                <span>: </span>
-                                <span class="ml-4">220819</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Room Type</span>
-                                <span>: </span>
-                                <span class="ml-4">Sigle Room</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Total Nights</span>
-                                <span>: </span>
-                                <span class="ml-4">1</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Check-In</span>
-                                <span>: </span>
-                                <span class="ml-4">26 November 2024</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Check-Out</span>
-                                <span>: </span>
-                                <span class="ml-4">27 November 2024</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Total Charges</span>
-                                <span>: </span>
-                                <span class="ml-4">Rp1.500.000</span>
-                            </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
-                        </div>
-                    </div>
-
-                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
-                        <div class="flex items-center gap-5 pb-5">
-                            <p class="font-bold underline underline-offset-3">Reservation Details</p>
-                            <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                Paid
-                            </button>
-                        </div>
-
-                        <div class="flex flex-col space-y-2">
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Name</span>
-                                <span>: </span>
-                                <span class="ml-4">Lucius Malfoy</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Reservation ID</span>
-                                <span>: </span>
-                                <span class="ml-4">231107</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Room Type</span>
-                                <span>: </span>
-                                <span class="ml-4">Executive Deluxe king</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Total Nights</span>
-                                <span>: </span>
-                                <span class="ml-4">3</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Check-In</span>
-                                <span>: </span>
-                                <span class="ml-4">26 November 2024</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Check-Out</span>
-                                <span>: </span>
-                                <span class="ml-4">29 November 2024</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Total Charges</span>
-                                <span>: </span>
-                                <span class="ml-4">Rp4.500.000</span>
-                            </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
-                        </div>
-                    </div>
-                </div>
+                    
             </div>
         </div>
-</div>
-            
 
         <script src="js/klik.js"></script>
 </body>
