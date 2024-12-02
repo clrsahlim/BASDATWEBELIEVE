@@ -1,3 +1,37 @@
+<?php
+session_start();
+include 'database.php';
+
+if (!isset($_SESSION['prepayment'])) {
+    echo "No prepayment data found.";
+    exit();
+}
+
+$prepayment = $_SESSION['prepayment'];
+
+// Ambil data prepayment berdasarkan reservation_id dari session
+$reservation_id = $_SESSION['prepayment']['reservation_id']; // Pastikan session ini sudah diatur
+
+// Query untuk mendapatkan status_prepayment
+$query = "SELECT status_prepayment FROM prepayment WHERE id_reservasi = :reservation_id";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':reservation_id', $reservation_id);
+
+$stmt->execute();
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Cek apakah data ditemukan
+$status_prepayment = isset($result['status_prepayment']) ? $result['status_prepayment'] : 0;
+
+if ($status_prepayment === true) { // Status benar-benar "true" (boolean)
+    $buttonClass = "outline outline-green-500 bg-green-500";
+    $buttonText = "Paid";
+} elseif ($status_prepayment === false) { // Status benar-benar "false" (boolean)
+    $buttonClass = "outline outline-merah bg-merah";
+    $buttonText = "Down-Payment";
+} 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,8 +124,8 @@
                     <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
                         <div class="flex items-center gap-5 pb-5">
                             <p class="font-bold underline underline-offset-3">Payment Details</p>
-                            <button class="outline outline-merah bg-merah rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                Down-Payment
+                            <button class="<?php echo $buttonClass; ?> rounded-full text-white px-3 text-xs font-semibold">
+                                <?php echo $buttonText; ?>
                             </button>
                         </div>
 
@@ -99,37 +133,37 @@
                             <div class="flex">
                                 <span class="w-32 font-semibold">Guest Name</span>
                                 <span>: </span>
-                                <span class="ml-4">James Potter</span>
+                                <span class="ml-4"><?= htmlspecialchars($prepayment['nama_tamu']) ?></span>
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Reservation ID</span>
                                 <span>: </span>
-                                <span class="ml-4">021345</span>
+                                <span class="ml-4"><?= htmlspecialchars($prepayment['reservation_id']) ?></span>
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Room Type</span>
                                 <span>: </span>
-                                <span class="ml-4">Executive King</span>
+                                <span class="ml-4"><?= htmlspecialchars($prepayment['tipe_kamar']) ?></span>
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Room Number</span>
                                 <span>: </span>
-                                <span class="ml-4">101</span>
+                                <span class="ml-4"><?= htmlspecialchars($prepayment['nomor_kamar']) ?></span>
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Room Charges</span>
                                 <span>: </span>
-                                <span class="ml-4">Rp 1225000</span>
+                                <span class="ml-4">Rp </span>
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Deposit</span>
                                 <span>: </span>
-                                <span class="ml-4">Rp 700000</span>
+                                <span class="ml-4">Rp <?= number_format($prepayment['deposit'], 0, ',', '.') ?></span>
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Total Charges</span>
                                 <span>: </span>
-                                <span class="ml-4">Rp 2.025.000</span>
+                                <span class="ml-4">Rp <?= number_format($prepayment['total_charges'], 0, ',', '.') ?></span>
                     </div>
 
         <script src="js/klik.js"></script>

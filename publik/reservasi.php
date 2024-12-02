@@ -1,9 +1,9 @@
 <?php
-include 'database.php'; // Pastikan file database.php sudah benar
+session_start(); // Mulai session di awal file
+include 'database.php';
 include 'fetch_rooms.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Ambil data dari form
     $nama_tamu = $_POST['nama_tamu'];
     $nik = isset($_POST['nik']) ? $_POST['nik'] : null;
     $alamat = $_POST['alamat'];
@@ -15,12 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nomor_kamar = $_POST['nomor_kamar'];
 
     try {
-        // 1. Insert reservation data into the reservation table
+        // Insert ke tabel reservation
         $sql = "INSERT INTO reservation (nama_tamu, nik, alamat, no_telp, email, tanggal_checkin, tanggal_checkout, tipe_kamar, nomor_kamar)
                 VALUES (:nama_tamu, :nik, :alamat, :no_telp, :email, :tanggal_checkin, :tanggal_checkout, :tipe_kamar, :nomor_kamar)";
         $stmt = $conn->prepare($sql);
 
-        // Bind parameters
         $stmt->bindParam(':nama_tamu', $nama_tamu);
         $stmt->bindParam(':nik', $nik);
         $stmt->bindParam(':alamat', $alamat);
@@ -31,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':tipe_kamar', $tipe_kamar);
         $stmt->bindParam(':nomor_kamar', $nomor_kamar);
 
-        // Execute the statement
         if ($stmt->execute()) {
             // 2. Update the room status to false after successful reservation
             $query = "UPDATE kamar SET status_kamar = false WHERE tipe_kamar = :tipe_kamar AND nomor_kamar = :nomor_kamar AND status_kamar = true";
@@ -39,17 +37,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(':tipe_kamar', $tipe_kamar);
             $stmt->bindParam(':nomor_kamar', $nomor_kamar);
 
-            // Execute the update statement
-            if ($stmt->execute()) {
-                // Redirect to another page after successful order and status update
-                header("Location: prepayment_user.php"); // Ganti dengan halaman yang sesuai
+        if ($stmt->execute()) {
+            $reservation_id = $conn->lastInsertId(); // Ambil ID reservasi terakhir
+
+            // Insert ke tabel prepayment
+            $total_charges = 2025000; // Contoh, sesuaikan dengan perhitungan
+            $deposit = 700000; // Contoh, sesuaikan dengan kebutuhan
+
+            $prepayment_sql = "INSERT INTO prepayment (id_reservasi, total_charge, deposit, status_prepayment)
+                               VALUES (:id_reservasi, :total_charge, :deposit, :status_prepayment)";
+            $prepayment_stmt = $conn->prepare($prepayment_sql);
+
+            $prepayment_stmt->bindParam(':id_reservasi', $reservation_id);
+            $prepayment_stmt->bindParam(':total_charge', $total_charges);
+            $prepayment_stmt->bindParam(':deposit', $deposit);
+            $prepayment_stmt->bindValue(':status_prepayment', 'false'); // Status awal pembayaran
+
+            if ($prepayment_stmt->execute()) {
+                // Simpan data ke session untuk ditampilkan di halaman berikutnya
+                $_SESSION['prepayment'] = [
+                    'reservation_id' => $reservation_id,
+                    'nama_tamu' => $nama_tamu,
+                    'tipe_kamar' => $tipe_kamar,
+                    'nomor_kamar' => $nomor_kamar,
+                    'total_charges' => $total_charges,
+                    'deposit' => $deposit
+                ];
+
+                // Redirect ke halaman prepayment_user
+                header("Location: prepayment_user.php");
                 exit();
             } else {
-                echo "Failed to update room status.";
+                echo "Failed to add prepayment data.";
             }
         } else {
             echo "Failed to add reservation.";
         }
+    }
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
