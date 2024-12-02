@@ -153,7 +153,7 @@ if ($status_prepayment === true) { // Status benar-benar "true" (boolean)
                             <div class="flex">
                                 <span class="w-32 font-semibold">Room Charges</span>
                                 <span>: </span>
-                                <span class="ml-4">Rp </span>
+                                <span class="ml-4">Rp <?= number_format($prepayment['total_harga'], 0, ',', '.') ?></span>
                             </div>
                             <div class="flex">
                                 <span class="w-32 font-semibold">Deposit</span>

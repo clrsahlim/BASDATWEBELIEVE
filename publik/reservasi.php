@@ -37,42 +37,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(':tipe_kamar', $tipe_kamar);
             $stmt->bindParam(':nomor_kamar', $nomor_kamar);
 
-        if ($stmt->execute()) {
-            $reservation_id = $conn->lastInsertId(); // Ambil ID reservasi terakhir
+            if ($stmt->execute()) {
+                $reservation_id = $conn->lastInsertId(); // Ambil ID reservasi terakhir
+            
+                // Ambil harga kamar berdasarkan tipe_kamar atau nomor_kamar
+                $query_kamar = "SELECT harga_kamar FROM kamar WHERE tipe_kamar = :tipe_kamar AND nomor_kamar = :nomor_kamar";
+                $stmt_kamar = $conn->prepare($query_kamar);
+                $stmt_kamar->bindParam(':tipe_kamar', $tipe_kamar);
+                $stmt_kamar->bindParam(':nomor_kamar', $nomor_kamar);
+                $stmt_kamar->execute();
+            
+                $kamar = $stmt_kamar->fetch(PDO::FETCH_ASSOC);
+            
+                if (!$kamar) {
+                    echo "Room not found!";
+                    exit();
+                }
+            
+                $harga_kamar = $kamar['harga_kamar']; // Harga kamar per malam
+            
+                // Hitung jumlah hari menginap
+                $checkin_date = new DateTime($tanggal_checkin);
+                $checkout_date = new DateTime($tanggal_checkout);
+                $jumlah_hari = $checkin_date->diff($checkout_date)->days;
+            
+                if ($jumlah_hari < 1) {
+                    echo "Invalid check-in/check-out dates!";
+                    exit();
+                }
+            
+                // Hitung total harga
+                $total_harga = $harga_kamar * $jumlah_hari;
+                $deposit = $total_harga* (50/100); 
+                $total_charges = $total_harga + $deposit;
 
-            // Insert ke tabel prepayment
-            $total_charges = 2025000; // Contoh, sesuaikan dengan perhitungan
-            $deposit = 700000; // Contoh, sesuaikan dengan kebutuhan
-
-            $prepayment_sql = "INSERT INTO prepayment (id_reservasi, total_charge, deposit, status_prepayment)
-                               VALUES (:id_reservasi, :total_charge, :deposit, :status_prepayment)";
-            $prepayment_stmt = $conn->prepare($prepayment_sql);
-
-            $prepayment_stmt->bindParam(':id_reservasi', $reservation_id);
-            $prepayment_stmt->bindParam(':total_charge', $total_charges);
-            $prepayment_stmt->bindParam(':deposit', $deposit);
-            $prepayment_stmt->bindValue(':status_prepayment', 'false'); // Status awal pembayaran
-
-            if ($prepayment_stmt->execute()) {
-                // Simpan data ke session untuk ditampilkan di halaman berikutnya
-                $_SESSION['prepayment'] = [
-                    'reservation_id' => $reservation_id,
-                    'nama_tamu' => $nama_tamu,
-                    'tipe_kamar' => $tipe_kamar,
-                    'nomor_kamar' => $nomor_kamar,
-                    'total_charges' => $total_charges,
-                    'deposit' => $deposit
-                ];
-
-                // Redirect ke halaman prepayment_user
-                header("Location: prepayment_user.php");
-                exit();
+                $prepayment_sql = "INSERT INTO prepayment (id_reservasi, total_harga, total_charge, deposit, status_prepayment)
+                                   VALUES (:id_reservasi, :total_harga, :total_charge, :deposit, :status_prepayment)";
+                $prepayment_stmt = $conn->prepare($prepayment_sql);
+            
+                $prepayment_stmt->bindParam(':id_reservasi', $reservation_id);
+                $prepayment_stmt->bindParam(':total_harga', $total_harga);
+                $prepayment_stmt->bindParam(':total_charge', $total_charges);
+                $prepayment_stmt->bindParam(':deposit', $deposit);
+                $prepayment_stmt->bindValue(':status_prepayment', 'false'); // Status awal pembayaran
+            
+                if ($prepayment_stmt->execute()) {
+                    // Simpan data ke session untuk ditampilkan di halaman berikutnya
+                    $_SESSION['prepayment'] = [
+                        'reservation_id' => $reservation_id,
+                        'nama_tamu' => $nama_tamu,
+                        'tipe_kamar' => $tipe_kamar,
+                        'nomor_kamar' => $nomor_kamar,
+                        'total_charges' => $total_charges,
+                        'deposit' => $deposit,
+                        'total_harga' => $total_harga
+                    ];
+            
+                    // Redirect ke halaman prepayment_user
+                    header("Location: prepayment_user.php");
+                    exit();
+                } else {
+                    echo "Failed to add prepayment data.";
+                }
             } else {
-                echo "Failed to add prepayment data.";
+                echo "Failed to add reservation.";
             }
-        } else {
-            echo "Failed to add reservation.";
-        }
     }
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
