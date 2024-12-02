@@ -1,20 +1,6 @@
 <?php
 include 'database.php';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_reservasi = $_POST['id_reservasi'];
-
-    try {
-        $sql = "UPDATE prepayment SET status_prepayment = 'true' WHERE id_reservasi = :id_reservasi";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id_reservasi', $id_reservasi);
-        $stmt->execute();
-
-        echo json_encode(['success' => true]);
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-    }
-}
+include 'update_prepayment.php';
 
 try {
     // Query untuk mengambil data dari kedua tabel
@@ -182,12 +168,13 @@ try {
                                         <span class="ml-4">Rp <?= number_format($data['total_charge'], 0, ',', '.') ?></span>
                                     </div>
                                     <button 
-                                        class="outline outline-coklat bg-coklat text-boneWhite rounded-full pay-button <?= $data['status_prepayment'] == 'true' ? 'bg-gray-400 cursor-not-allowed' : '' ?>" 
+                                        class="bg-coklat text-boneWhite rounded-full pay-button no-outline <?= $data['status_prepayment'] == 'true' ? 'bg-gray cursor-not-allowed' : '' ?>" 
                                         data-id="<?= $data['id_reservasi'] ?>" 
                                         <?= $data['status_prepayment'] == 'true' ? 'disabled' : '' ?>
                                     >
-                                        <a href="#">Pay</a>
+                                        <?= $data['status_prepayment'] == 'true' ? 'Paid' : 'Pay' ?>
                                     </button>
+
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -216,7 +203,7 @@ try {
                         if (data.success) {
                             // Update button appearance
                             buttonElement.classList.remove('bg-coklat');
-                            buttonElement.classList.add('bg-gray-400', 'cursor-not-allowed');
+                            buttonElement.classList.add('bg-gray', 'cursor-not-allowed');
                             buttonElement.disabled = true;
                             buttonElement.innerHTML = 'Paid';
                         } else {
