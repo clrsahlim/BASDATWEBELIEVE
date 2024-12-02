@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // Pengguna belum login
+    header('Location: login.php');
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -155,51 +166,67 @@
     </nav>
     
     <div class="flex flex-1">
-        <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
-            <ul>
-                <li class="flex items-center mb-8 mr-2 gap-2 mt-5">
-                    <img class="h-5" src="img/dashboard.png" alt="">
-                    <a href="dasboard.html" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
-                </li>
+    <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
+        <ul>
+            <!-- Dashboard -->
+            <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
+                <img class="h-5" src="img/dashboard.png" alt="">
+                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">DASHBOARD</a>
+            </li>
 
-                <li class="flex items-center mb-8 mr-2 gap-2">
-                    <img class="h-5" src="img/room.png" alt="">
-                    <a href="room.html" class="font-audiowide text-xs md:text-xl  underline underline-offset-4">ROOM MANAGEMENT</a>
-                </li>
+            <!-- Room Management (Accessible for both admin and user) -->
+            <li class="flex items-center mb-8 mr-2 gap-2">
+                <img class="h-5" src="img/room.png" alt="">
+                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+            </li>
 
+            <!-- Guest Database (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
                 <li class="flex items-center mb-8 mr-2 gap-2">
                     <img class="h-5" src="img/guest.png" alt="">
-                    <a href="guest.html" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
+                    <a href="guest.php" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
                 </li>
+            <?php } ?>
 
-                <li class="flex items-center mb-8 mr-2 gap-2">
-                    <img class="h-5" src="img/reserv.png" alt="">
-                    <a href="reservasi.php" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
-                </li>
+            <!-- Reservation (Accessible for both admin and user) -->
+            <li class="flex items-center mb-8 mr-2 gap-2">
+                <img class="h-5" src="img/reserv.png" alt="">
+                <a href="reservasi.php" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
+            </li>
 
+            <!-- Check-In (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
                 <li class="flex items-center mb-8 mr-2 gap-2">
                     <img class="h-5" src="img/in.png" alt="">
-                    <a href="checkin.html" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
+                    <a href="checkin.php" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
                 </li>
+            <?php } ?>
 
+            <!-- Check-Out (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
                 <li class="flex items-center mb-8 mr-2 gap-2">
                     <img class="h-5" src="img/out.png" alt="">
-                    <a href="checkout.html" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
+                    <a href="checkout.php" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
                 </li>
+            <?php } ?>
 
+            <?php if (isset($_SESSION['role'])) { ?>
+    <li class="flex items-center mb-8 mr-2 gap-2">
+        <img class="h-5" src="img/payment.png" alt="">
+        <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
+    </li>
+<?php } ?>
+
+            <!-- Payment (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
                 <li class="flex items-center mb-8 mr-2 gap-2">
                     <img class="h-5" src="img/payment.png" alt="">
-                    <a href="prepayment.html" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
+                    <a href="payment.php" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
                 </li>
-
-                <li class="flex items-center mb-8 mr-2 gap-2">
-                    <img class="h-5" src="img/payment.png" alt="">
-                    <a href="payment.html" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
-                </li>
-            </ul>
-        </div>
-
-        <main class="flex-1 p-6 lg:p-10">
+            <?php } ?>
+        </ul>
+    </div>
+    <main class="flex-1 p-6 lg:p-10">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div class="room-card">
                     <div class="card-header">
@@ -287,6 +314,9 @@
             </div>
         </main>
     </div>
+</div>
+
+        
 
     <script src="js/klik.js"></script>
 </body>

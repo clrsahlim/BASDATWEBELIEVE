@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // Pengguna belum login
+    header('Location: login.php');
+    exit;
+}
+
+if ($_SESSION['role'] != 'admin') {
+    // Hanya admin yang bisa mengakses halaman ini
+    header('Location: dasboard.php');
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,51 +56,68 @@
         </div>
     </nav>
     
-        <div class="flex flex-1">
-            <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
-                <ul>
-                    <li class="flex items-center mb-8 mr-2 gap-2 mt-5">
-                        <img class="h-5" src="img/dashboard.png" alt="">
-                        <a href="dasboard.html" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
-                    </li>
+    <div class="flex flex-1">
+    <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
+        <ul>
+            <!-- Dashboard -->
+            <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
+                <img class="h-5" src="img/dashboard.png" alt="">
+                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">DASHBOARD</a>
+            </li>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/room.png" alt="">
-                        <a href="room.html" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
-                    </li>
+            <!-- Room Management (Accessible for both admin and user) -->
+            <li class="flex items-center mb-8 mr-2 gap-2">
+                <img class="h-5" src="img/room.png" alt="">
+                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+            </li>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/guest.png" alt="">
-                        <a href="guest.html" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
-                    </li>
+            <!-- Guest Database (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/guest.png" alt="">
+                    <a href="guest.php" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
+                </li>
+            <?php } ?>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/reserv.png" alt="">
-                        <a href="reservasi.php" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
-                    </li>
+            <!-- Reservation (Accessible for both admin and user) -->
+            <li class="flex items-center mb-8 mr-2 gap-2">
+                <img class="h-5" src="img/reserv.png" alt="">
+                <a href="reservasi.php" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
+            </li>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/in.png" alt="">
-                        <a href="checkin.html" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
-                    </li>
+            <!-- Check-In (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/in.png" alt="">
+                    <a href="checkin.php" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
+                </li>
+            <?php } ?>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/out.png" alt="">
-                        <a href="checkout.html" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
-                    </li>
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/payment.png" alt="">
-                        <a href="prepayment.html" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
-                    </li>
-                    
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/payment.png" alt="">
-                        <a href="payment.html" class="font-audiowide text-xs md:text-xl underline underline-offset-4">PAYMENT</a>
-                    </li>
-                </ul>
-            </div>
+            <!-- Check-Out (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/out.png" alt="">
+                    <a href="checkout.php" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
+                </li>
+            <?php } ?>
 
-            <div class="flex-1 p-10">
+            <?php if (isset($_SESSION['role'])) { ?>
+    <li class="flex items-center mb-8 mr-2 gap-2">
+        <img class="h-5" src="img/payment.png" alt="">
+        <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
+    </li>
+<?php } ?>
+
+            <!-- Payment (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/payment.png" alt="">
+                    <a href="payment.php" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
+    <div class="flex-1 p-10">
                 <div class="md:grid md:grid-cols-2 md:gap-6">
 
                     <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
@@ -169,6 +202,7 @@
                             <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full"><a href="">Pay</a></button>
                         </div>
                     </div>
+</div>
 
 
         <script src="js/klik.js"></script>

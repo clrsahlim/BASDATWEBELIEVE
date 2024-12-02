@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // Pengguna belum login
+    header('Location: login.php');
+    exit;
+}
+
+if ($_SESSION['role'] != 'admin') {
+    // Hanya admin yang bisa mengakses halaman ini
+    header('Location: dasboard.php');
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,67 +48,92 @@
         <button id="tombolSidebar">
             <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
         </button>
-        <h1 class="text-3xl font-audiowide absolute inset-0 flex justify-center items-center" style="pointer-events: none;">CHECK-OUT</h1>
+        <h1 class="text-3xl font-audiowide absolute inset-0 flex justify-center items-center" style="pointer-events: none;">CHECK-IN</h1>
         <div class="flex items-center space-x-4">
             <div id="timeDisplay" class="bg-gray-200 px-3 py-1" style="margin-right: 1rem;"></div>
             <img id="userIcon" class="h-8 w-8 rounded-full" src="img/aaa.png" alt="User Icon">
         </div>
     </nav>
     
-        <div class="flex flex-1">
-            <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
-                <ul>
-                    <li class="flex items-center mb-8 mr-2 gap-2 mt-5">
-                        <img class="h-5" src="img/dashboard.png" alt="">
-                        <a href="dasboard.html" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
-                    </li>
+    <div class="flex flex-1">
+    <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
+        <ul>
+            <!-- Dashboard -->
+            <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
+                <img class="h-5" src="img/dashboard.png" alt="">
+                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">DASHBOARD</a>
+            </li>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/room.png" alt="">
-                        <a href="room.html" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
-                    </li>
+            <!-- Room Management (Accessible for both admin and user) -->
+            <li class="flex items-center mb-8 mr-2 gap-2">
+                <img class="h-5" src="img/room.png" alt="">
+                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+            </li>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/guest.png" alt="">
-                        <a href="guest.html" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
-                    </li>
+            <!-- Guest Database (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/guest.png" alt="">
+                    <a href="guest.php" class="font-audiowide text-xs md:text-xl">GUEST DATABASE</a>
+                </li>
+            <?php } ?>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/reserv.png" alt="">
-                        <a href="reservasi.php" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
-                    </li>
+            <!-- Reservation (Accessible for both admin and user) -->
+            <li class="flex items-center mb-8 mr-2 gap-2">
+                <img class="h-5" src="img/reserv.png" alt="">
+                <a href="reservasi.php" class="font-audiowide text-xs md:text-xl">RESERVATION</a>
+            </li>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/in.png" alt="">
-                        <a href="checkin.html" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
-                    </li>
+            <!-- Check-In (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/in.png" alt="">
+                    <a href="checkin.php" class="font-audiowide text-xs md:text-xl">CHECK IN</a>
+                </li>
+            <?php } ?>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/out.png" alt="">
-                        <a href="checkout.html" class="font-audiowide text-xs md:text-xl underline underline-offset-4">CHECK OUT</a>
-                    </li>
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/payment.png" alt="">
-                        <a href="prepayment.html" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
-                    </li>
+            <!-- Check-Out (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/out.png" alt="">
+                    <a href="checkout.php" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
+                </li>
+            <?php } ?>
 
-                    <li class="flex items-center mb-8 mr-2 gap-2">
-                        <img class="h-5" src="img/payment.png" alt="">
-                        <a href="payment.html" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
-                    </li>
-                </ul>
-            </div>
+            <?php if (isset($_SESSION['role'])) { ?>
+    <li class="flex items-center mb-8 mr-2 gap-2">
+        <img class="h-5" src="img/payment.png" alt="">
+        <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
+    </li>
+<?php } ?>
 
-            <div class="flex-1 p-10">
+            <!-- Payment (Only for admin) -->
+            <?php if ($_SESSION['role'] == 'admin') { ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/payment.png" alt="">
+                    <a href="payment.php" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
+    <div class="flex-1 p-10">
+                <label class="relative block">
+                    <span class="sr-only">Search</span>
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                      <img class="h-5 w-5 " viewBox="0 0 20 20" src="img/IconSeacrh.png"></img>
+                    </span>
+                    <input class="placeholder:font-bold placeholder:text-coklat placeholder:text-opacity-50 block bg-white w-full border border-coklat rounded-2xl py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-coklat focus:ring-coklat focus:ring-1" placeholder="Search reservations..." type="text" name="search"/>
+                </label>
+
                 <div class="md:grid md:grid-cols-2 md:gap-6">
 
                     <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
                         <div class="flex items-center gap-5 pb-5">
                             <p class="font-bold underline underline-offset-3">Reservation Details</p>
                             <button class="outline outline-merah bg-merah rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                Late Check-Out
+                                Down-Payment
                             </button>
-                        </div>
+                    </div>
 
                         <div class="flex flex-col space-y-2">
                             <div class="flex">
@@ -130,15 +171,16 @@
                                 <span>: </span>
                                 <span class="ml-4">Rp4.500.000</span>
                             </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full"><a href="/publik/checkout2.html">Details</a></button>
+                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
                         </div>
 
                     </div>
+
                     <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
                         <div class="flex items-center gap-5 pb-5">
                             <p class="font-bold underline underline-offset-3">Reservation Details</p>
                             <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                On-Schedule
+                                Paid
                             </button>
                         </div>
 
@@ -178,7 +220,7 @@
                                 <span>: </span>
                                 <span class="ml-4">Rp1.500.000</span>
                             </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full"><a href="">Details</a></button>
+                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
                         </div>
                     </div>
 
@@ -186,7 +228,7 @@
                         <div class="flex items-center gap-5 pb-5">
                             <p class="font-bold underline underline-offset-3">Reservation Details</p>
                             <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                On-Schedule
+                                Paid
                             </button>
                         </div>
 
@@ -226,7 +268,7 @@
                                 <span>: </span>
                                 <span class="ml-4">Rp1.500.000</span>
                             </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full"><a href="detailChecout.html">Details</a></button>
+                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
                         </div>
                     </div>
 
@@ -234,7 +276,7 @@
                         <div class="flex items-center gap-5 pb-5">
                             <p class="font-bold underline underline-offset-3">Reservation Details</p>
                             <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                On-Schedule
+                                Paid
                             </button>
                         </div>
 
@@ -274,12 +316,14 @@
                                 <span>: </span>
                                 <span class="ml-4">Rp4.500.000</span>
                             </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full"><a href="detailChecout.html">Details</a></button>
+                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+</div>
+            
 
         <script src="js/klik.js"></script>
 </body>
