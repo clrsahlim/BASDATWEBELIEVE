@@ -16,18 +16,20 @@ if ($_SESSION['role'] != 'admin') {
 
 try {
     $query = "SELECT 
-        r.nama_tamu, 
-        r.tipe_kamar, 
-        c.id_reservasi, 
-        c.damage_charge, 
-        c.tanggal_checkout, 
-        p.deposit,
-        p.id_prepayment,
-        c.id_checkout
-      FROM check_out c
-      JOIN reservation r ON c.id_reservasi = r.id_reservasi
-      JOIN prepayment p ON c.id_reservasi = p.id_reservasi
-      WHERE c.status_checkout = true";
+    r.nama_tamu, 
+    r.tipe_kamar, 
+    c.id_reservasi, 
+    c.damage_charge, 
+    c.tanggal_checkout, 
+    p.deposit, 
+    p.id_prepayment, 
+    c.id_checkout, 
+    COALESCE(pay.status_payment, FALSE) AS status_payment
+    FROM check_out c
+    JOIN reservation r ON c.id_reservasi = r.id_reservasi
+    JOIN prepayment p ON c.id_reservasi = p.id_reservasi
+    LEFT JOIN payment pay ON c.id_reservasi = pay.id_reservasi -- Join tabel payment untuk memeriksa status
+    WHERE c.status_checkout = true";
 
     $stmt = $conn->prepare($query);
     $stmt->execute();
@@ -109,7 +111,7 @@ try {
             <!-- Room Management (Accessible for both admin and user) -->
             <li class="flex items-center mb-8 mr-2 gap-2">
                 <img class="h-5" src="img/room.png" alt="">
-                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM STATUS</a>
             </li>
 
             <!-- Guest Database (Only for admin) -->
@@ -166,9 +168,14 @@ try {
                         <form action="save_payment.php" method="POST" id="paymentForm<?= $payment['id_reservasi'] ?>" onsubmit="return disableButtonAndChangeColor(event, <?= $payment['id_reservasi'] ?>)">
                             <div class="flex items-center gap-5 pb-5">
                                 <p class="font-bold underline underline-offset-3">Payment Details</p>
-                                <button type="button" id="downPaymentBtn<?= $payment['id_reservasi'] ?>" class="outline outline-merah bg-merah rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                    Down-Payment
+                                <button 
+                                    type="button" 
+                                    id="downPaymentBtn<?= $payment['id_reservasi'] ?>" 
+                                    class="outline rounded-full text-boneWhite px-3 text-xs font-semibold 
+                                        <?= $payment['status_payment'] ? 'outline-green-500 bg-green-500' : 'outline-merah bg-merah' ?>">
+                                    <?= $payment['status_payment'] ? 'Paid' : 'Down-Payment' ?>
                                 </button>
+
                             </div>
 
                             <div class="flex flex-col space-y-2">
@@ -179,34 +186,37 @@ try {
                                 <input type="hidden" name="damage_charge" value="<?= $payment['damage_charge'] ?>">
 
                                 <div class="flex">
-                                    <span class="w-32 font-semibold">Guest Name</span>
+                                    <span class="w-36 font-semibold">Guest Name</span>
                                     <span>: </span>
                                     <span class="ml-4"><?= htmlspecialchars($payment['nama_tamu']) ?></span>
                                 </div>
                                 <div class="flex">
-                                    <span class="w-32 font-semibold">Room Type</span>
+                                    <span class="w-36 font-semibold">Room Type</span>
                                     <span>: </span>
                                     <span class="ml-4"><?= htmlspecialchars($payment['tipe_kamar']) ?></span>
                                 </div>
                                 <div class="flex">
-                                    <span class="w-32 font-semibold">Deposit</span>
+                                    <span class="w-36 font-semibold">Deposit</span>
                                     <span>: </span>
                                     <span class="ml-4"><?= number_format($payment['deposit'], 0, ',', '.') ?></span>
                                 </div>
                                 <div class="flex">
-                                    <span class="w-32 font-semibold">Damage charges</span>
+                                    <span class="w-36 font-semibold">Damage charges</span>
                                     <span>: </span>
                                     <span class="ml-4"><?= number_format($payment['damage_charge'], 0, ',', '.') ?></span>
                                 </div>
                                 <div class="flex">
-                                    <span class="w-32 font-semibold">Refund</span>
+                                    <span class="w-36 font-semibold">Refund</span>
                                     <span>: </span>
                                     <span class="ml-4"><?= number_format($payment['deposit'] - $payment['damage_charge'], 0, ',', '.') ?></span>
                                 </div>
 
-                                <button type="submit" id="savePaymentBtn<?= $payment['id_reservasi'] ?>" class="outline outline-coklat bg-coklat text-boneWhite rounded-full px-4 py-2">
-                                    Save Payment
-                                </button>
+                                <?php if ($payment['status_payment']): ?>
+                                    <button class="bg-gray text-boneWhite rounded-full" disabled>Payment Saved</button>
+                                <?php else: ?>
+                                    <button type="submit" class="bg-coklat text-boneWhite rounded-full">Save Payment</button>
+                                <?php endif; ?>
+
                             </div>
                         </form>
                     </div>
@@ -214,40 +224,23 @@ try {
             </div>
         </div>
     </div>
-                        <script src="js/klik.js"></script>
-                        <script>
+
+    <script src="js/klik.js"></script>
+    <script>
     // Function to enable the button and change color of Down-Payment button after clicking it
-function disableButtonAndChangeColor(event, reservationId) {
-    event.preventDefault(); // Prevent form from submitting immediately
-    const saveButton = document.getElementById(`savePaymentBtn${reservationId}`);
-    const downPaymentButton = document.getElementById(`downPaymentBtn${reservationId}`);
-    
-    // Disable Save Payment button
-    saveButton.classList.add('disabled');
-    saveButton.disabled = true;
-    
-    // Change Down-Payment button color to green
-    downPaymentButton.classList.add('success');
-    
-    // Submit the form after changes
-    document.getElementById(`paymentForm${reservationId}`).submit();
-}
+        window.onload = function() {
+        <?php foreach ($dataTamu as $payment): ?>
+            const saveButton = document.getElementById(`savePaymentBtn<?= $payment['id_reservasi'] ?>`);
+            
+            // Jika status_payment sudah true, ubah tombol menjadi disabled
+            <?php if ($payment['status_payment']): ?>
+                saveButton.classList.add('bg-gray rounded-full', 'cursor-not-allowed');
+                saveButton.disabled = true;
+            <?php endif; ?>
+        <?php endforeach; ?>
+    };
 
-// Reset button states when the page loads
-window.onload = function() {
-    // Iterate over each payment and reset the state of the buttons
-    <?php foreach ($dataTamu as $payment): ?>
-        const downPaymentButton = document.getElementById(`downPaymentBtn<?= $payment['id_reservasi'] ?>`);
-        const saveButton = document.getElementById(`savePaymentBtn<?= $payment['id_reservasi'] ?>`);
-        
-        // Reset button styles to their default state
-        downPaymentButton.classList.remove('success'); // Remove success class
-        saveButton.classList.remove('disabled'); // Enable the Save Payment button
-        saveButton.disabled = false; // Re-enable Save Payment button
-    <?php endforeach; ?>
-}
-
-</script>
+    </script>
 
 
 

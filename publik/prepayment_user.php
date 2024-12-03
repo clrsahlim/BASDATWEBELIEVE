@@ -99,7 +99,7 @@ if ($status_prepayment === true) { // Status benar-benar "true" (boolean)
             <!-- Room Management (Accessible for both admin and user) -->
             <li class="flex items-center mb-8 mr-2 gap-2">
                 <img class="h-5" src="img/room.png" alt="">
-                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM STATUS</a>
             </li>
 
             <!-- Guest Database (Only for admin) -->
@@ -134,11 +134,11 @@ if ($status_prepayment === true) { // Status benar-benar "true" (boolean)
 
             <!-- Pre-Payment (Only for admin) -->
             <?php if (isset($_SESSION['role'])) { ?>
-    <li class="flex items-center mb-8 mr-2 gap-2">
-        <img class="h-5" src="img/payment.png" alt="">
-        <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl underline underline-offset-4">PRE-PAYMENT</a>
-    </li>
-<?php } ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/payment.png" alt="">
+                    <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl underline underline-offset-4">PRE-PAYMENT</a>
+                </li>
+            <?php } ?>
 
             <!-- Payment (Only for admin) -->
             <?php if ($_SESSION['role'] == 'admin') { ?>

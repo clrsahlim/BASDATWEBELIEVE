@@ -88,7 +88,7 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     <li class="flex items-center mb-8 mr-2 gap-2">
                         <img class="h-5" src="img/room.png" alt="">
-                        <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+                        <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM STATUS</a>
                     </li>
 
                     <li class="flex items-center mb-8 mr-2 gap-2">

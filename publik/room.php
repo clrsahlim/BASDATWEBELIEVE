@@ -58,14 +58,11 @@ try {
         }
 
         .btn-book {
-            background-color: green;
-            color: white;
             box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
         }  
 
         .btn-unavailable {
-            background-color: #BE1717;
-            color: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
             cursor: not-allowed;
@@ -164,7 +161,7 @@ try {
         <button id="tombolSidebar">
             <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
         </button>
-        <h1 class="text-3xl font-audiowide absolute inset-0 flex justify-center items-center" style="pointer-events: none;">ROOM MANAGEMENT</h1>
+        <h1 class="text-3xl font-audiowide absolute inset-0 flex justify-center items-center" style="pointer-events: none;">ROOM STATUS</h1>
         <div class="flex items-center space-x-4">
             <div id="timeDisplay" class="bg-gray-200 px-3 py-1" style="margin-right: 1rem;"></div>
             <img id="userIcon" class="h-8 w-8 rounded-full" src="img/aaa.png" alt="User Icon">
@@ -183,7 +180,7 @@ try {
             <!-- Room Management (Accessible for both admin and user) -->
             <li class="flex items-center mb-8 mr-2 gap-2">
                 <img class="h-5" src="img/room.png" alt="">
-                <a href="room.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">ROOM MANAGEMENT</a>
+                <a href="room.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">ROOM STATUS</a>
             </li>
 
             <!-- Guest Database (Only for admin) -->
@@ -241,21 +238,23 @@ try {
                             <div class="card-header">
                                 <h2 class="text-xl font-bold card-text"><?= htmlspecialchars($room['tipe_kamar']); ?></h2>
                             </div>
-                            <div class="card-body text-lg">
-                                <div class="grid grid-cols-2 mb-2">
-                                    <p class="font-semibold card-number">Room Number</p>
-                                    <p class="font-semibold card-number">: <?= htmlspecialchars($room['nomor_kamar']); ?></p>
+                            <div class="card-body text-lg font-semibold">
+                                <div class="flex">
+                                    <span class="w-24">Room</span>
+                                    <span>: </span>
+                                    <span class="ml-4"><?= htmlspecialchars($room['nomor_kamar']); ?></span>
                                 </div>
-                                <div class="grid grid-cols-2">
-                                    <p class="font-semibold card-price">Price</p>
-                                    <p class="font-semibold card-price">: IDR <?= htmlspecialchars(number_format($room['harga_kamar'])); ?>/night</p>
+                                <div class="flex">
+                                    <span class="w-24">Price</span>
+                                    <span>: </span>
+                                    <span class="ml-4">IDR <?= htmlspecialchars(number_format($room['harga_kamar']));?>/night</span>
                                 </div>
                             </div>
                             <div class="btn-container">
                                 <?php if ($room['status_kamar']): // Cek jika status_kamar bernilai true ?>
-                                    <button class="btn-book" >Available</button>
+                                    <button class="btn-book bg-green-500 text-boneWhite" >Available</button>
                                 <?php else: // Jika status_kamar bernilai false ?>
-                                    <button class="btn-unavailable"  disabled>Unavailable</button>
+                                    <button class="btn-unavailable bg-merah text-boneWhite"  disabled>Unavailable</button>
                                 <?php endif; ?>
                             </div>
 

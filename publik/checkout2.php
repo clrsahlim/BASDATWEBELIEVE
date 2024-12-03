@@ -65,7 +65,7 @@ if ($_SESSION['role'] != 'admin') {
             <!-- Room Management (Accessible for both admin and user) -->
             <li class="flex items-center mb-8 mr-2 gap-2">
                 <img class="h-5" src="img/room.png" alt="">
-                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM MANAGEMENT</a>
+                <a href="room.php" class="font-audiowide text-xs md:text-xl">ROOM STATUS</a>
             </li>
 
             <!-- Guest Database (Only for admin) -->
