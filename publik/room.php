@@ -1,11 +1,28 @@
 <?php
 session_start();
+// Memasukkan file database.php untuk koneksi
+include 'database.php';
 
 if (!isset($_SESSION['user_id'])) {
     // Pengguna belum login
     header('Location: login.php');
     exit;
 }
+
+if ($_SESSION['role'] != 'admin') {
+    // Hanya admin yang bisa mengakses halaman ini
+    header('Location: dasboard.php');
+    exit;
+}
+
+// Query untuk mengambil data dari tabel kamar
+try {
+    $stmt = $conn->query("SELECT * FROM kamar ORDER BY status_kamar DESC");
+    $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Query failed: " . $e->getMessage());
+}
+
 
 ?>
 
@@ -15,8 +32,8 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <title>Manajemen Hotel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900" rel="stylesheet">
+    <title>Room Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -41,15 +58,10 @@ if (!isset($_SESSION['user_id'])) {
         }
 
         .btn-book {
-            background-color: #FFDBB5;
-            color: black;
+            background-color: green;
+            color: white;
             box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-book:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-         }   
+        }  
 
         .btn-unavailable {
             background-color: #BE1717;
@@ -59,11 +71,6 @@ if (!isset($_SESSION['user_id'])) {
             cursor: not-allowed;
         }
 
-        .btn-unavailable:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-            cursor: not-allowed;
-        }
         .text-sm-gray {
             color: #7F7F7F;
         }
@@ -149,7 +156,6 @@ if (!isset($_SESSION['user_id'])) {
         font-size: 0.875rem; 
         white-space: nowrap; 
         }
-
     </style>
 </head>
 <body class="flex flex-col h-screen bg-white">
@@ -164,7 +170,7 @@ if (!isset($_SESSION['user_id'])) {
             <img id="userIcon" class="h-8 w-8 rounded-full" src="img/aaa.png" alt="User Icon">
         </div>
     </nav>
-    
+
     <div class="flex flex-1">
     <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
         <ul>
@@ -226,97 +232,42 @@ if (!isset($_SESSION['user_id'])) {
             <?php } ?>
         </ul>
     </div>
-    <main class="flex-1 p-6 lg:p-10">
+
+        <main class="flex-1 p-6 lg:p-10">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="room-card">
-                    <div class="card-header">
-                        <h2 class="text-xl font-bold card-text">Guest Room</h2>
-                        <span class="text-sm font-medium text-gray-500 card-text">Single Bed</span>
-                    </div>
-                    <div class="card-body text-lg">
-                        <div class="grid grid-cols-2 mb-2">
-                            <p class="font-semibold card-status text">Status</p>
-                            <p class="font-semibold card-status">: &nbspAvailable</p>
-                        </div>
-                        <div class="grid grid-cols-2 mb-2">
-                            <p class="font-semibold card-number">Room Number</p>
-                            <p class="font-semibold card-number">: &nbsp401</p>
-                        </div>
-                        <div class="grid grid-cols-2">
-                            <p class="font-semibold card-price">Price</p>
-                            <p class="font-semibold card-price">: &nbspIDR 1.500k/night</p>
-                        </div>
-                    </div>
-                    <div class="btn-container">
-                        <button 
-                            class="btn-book"
-                            onclick="bookRoom(401)">
-                            Book
-                        </button>
-                    </div>
-                </div>
+                <?php if (!empty($rooms)): ?>
+                    <?php foreach ($rooms as $room): ?>
+                        <div class="room-card">
+                            <div class="card-header">
+                                <h2 class="text-xl font-bold card-text"><?= htmlspecialchars($room['tipe_kamar']); ?></h2>
+                            </div>
+                            <div class="card-body text-lg">
+                                <div class="grid grid-cols-2 mb-2">
+                                    <p class="font-semibold card-number">Room Number</p>
+                                    <p class="font-semibold card-number">: <?= htmlspecialchars($room['nomor_kamar']); ?></p>
+                                </div>
+                                <div class="grid grid-cols-2">
+                                    <p class="font-semibold card-price">Price</p>
+                                    <p class="font-semibold card-price">: IDR <?= htmlspecialchars(number_format($room['harga_kamar'])); ?>/night</p>
+                                </div>
+                            </div>
+                            <div class="btn-container">
+                                <?php if ($room['status_kamar']): // Cek jika status_kamar bernilai true ?>
+                                    <button class="btn-book" >Available</button>
+                                <?php else: // Jika status_kamar bernilai false ?>
+                                    <button class="btn-unavailable"  disabled>Unavailable</button>
+                                <?php endif; ?>
+                            </div>
 
-                <div class="room-card">
-                    <div class="card-header">
-                        <h2 class="text-xl font-bold card-text">Guest Room</h2>
-                        <span class="text-sm font-medium text-gray-500 card-text">Single Bed</span>
-                    </div>
-                    <div class="card-body text-lg">
-                        <div class="grid grid-cols-2 mb-2">
-                            <p class="font-semibold card-status text">Status</p>
-                            <p class="font-semibold card-status">: &nbspAvailable</p>
-                        </div>
-                        <div class="grid grid-cols-2 mb-2">
-                            <p class="font-semibold card-number">Room Number</p>
-                            <p class="font-semibold card-number">: &nbsp402</p>
-                        </div>
-                        <div class="grid grid-cols-2">
-                            <p class="font-semibold card-price">Price</p>
-                            <p class="font-semibold card-price">: &nbspIDR 1.500k/night</p>
-                        </div>
-                    </div>
-                    <div class="btn-container">
-                        <button 
-                            class="btn-book"
-                            onclick="bookRoom(402)">
-                            Book
-                        </button>
-                    </div>
-                </div>
 
-                <div class="room-card">
-                    <div class="card-header">
-                        <h2 class="text-xl font-bold card-text">Guest Room</h2>
-                        <span class="text-sm font-medium text-gray-500 card-text">Single Bed</span>
-                    </div>
-                    <div class="card-body text-lg">
-                        <div class="grid grid-cols-2 mb-2">
-                            <p class="font-semibold card-status text">Status</p>
-                            <p class="font-semibold card-status">: &nbspAvailable</p>
                         </div>
-                        <div class="grid grid-cols-2 mb-2">
-                            <p class="font-semibold card-number">Room Number</p>
-                            <p class="font-semibold card-number">: &nbsp404</p>
-                        </div>
-                        <div class="grid grid-cols-2">
-                            <p class="font-semibold card-price">Price</p>
-                            <p class="font-semibold card-price">: &nbspIDR 1.500k/night</p>
-                        </div>
-                    </div>
-                    <div class="btn-container">
-                        <button 
-                            class="btn-unavailable"
-                            disabled>
-                            Unavailable
-                        </button>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No rooms available.</p>
+                <?php endif; ?>
             </div>
         </main>
     </div>
-</div>
-
-        
 
     <script src="js/klik.js"></script>
 </body>
