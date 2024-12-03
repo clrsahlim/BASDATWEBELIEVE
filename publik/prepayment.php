@@ -233,7 +233,7 @@ try {
                         if (data.success) {
                             // Update button appearance
                             buttonElement.classList.remove('bg-coklat');
-                            buttonElement.classList.add('bg-gray text-boneWhite', 'cursor-not-allowed');
+                            buttonElement.classList.add('bg-gray', 'cursor-not-allowed');
                             buttonElement.disabled = true;
                             buttonElement.innerHTML = 'Paid';
                         } else {
