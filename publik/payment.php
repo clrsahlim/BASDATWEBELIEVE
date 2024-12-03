@@ -216,45 +216,39 @@ try {
     </div>
                         <script src="js/klik.js"></script>
                         <script>
-    // Function to disable button and change color of Down-Payment button after form submission
-    function disableButtonAndChangeColor(event, reservationId) {
-        event.preventDefault(); // Prevent form from submitting immediately
-        const saveButton = document.getElementById(`savePaymentBtn${reservationId}`);
-        const downPaymentButton = document.getElementById(`downPaymentBtn${reservationId}`);
-        
-        // Disable Save Payment button
-        saveButton.classList.add('disabled');
-        saveButton.disabled = true;
-        
-        // Change Down-Payment button color to green
-        downPaymentButton.classList.add('success');
-        
-        // Save status to localStorage
-        localStorage.setItem(`paymentStatus${reservationId}`, 'completed');
-        
-        // Submit the form after changes
-        document.getElementById(`paymentForm${reservationId}`).submit();
-    }
+    // Function to enable the button and change color of Down-Payment button after clicking it
+function disableButtonAndChangeColor(event, reservationId) {
+    event.preventDefault(); // Prevent form from submitting immediately
+    const saveButton = document.getElementById(`savePaymentBtn${reservationId}`);
+    const downPaymentButton = document.getElementById(`downPaymentBtn${reservationId}`);
+    
+    // Disable Save Payment button
+    saveButton.classList.add('disabled');
+    saveButton.disabled = true;
+    
+    // Change Down-Payment button color to green
+    downPaymentButton.classList.add('success');
+    
+    // Submit the form after changes
+    document.getElementById(`paymentForm${reservationId}`).submit();
+}
 
-    // Check localStorage on page load to restore the button state
-    window.onload = function() {
-        // Iterate over each payment to restore its state based on localStorage
-        <?php foreach ($dataTamu as $payment): ?>
-            const paymentStatus = localStorage.getItem('paymentStatus<?= $payment['id_reservasi'] ?>');
-            if (paymentStatus === 'completed') {
-                const saveButton = document.getElementById('savePaymentBtn<?= $payment['id_reservasi'] ?>');
-                const downPaymentButton = document.getElementById('downPaymentBtn<?= $payment['id_reservasi'] ?>');
-                
-                // Disable Save Payment button
-                saveButton.classList.add('disabled');
-                saveButton.disabled = true;
-                
-                // Change Down-Payment button color to green
-                downPaymentButton.classList.add('success');
-            }
-        <?php endforeach; ?>
-    }
+// Reset button states when the page loads
+window.onload = function() {
+    // Iterate over each payment and reset the state of the buttons
+    <?php foreach ($dataTamu as $payment): ?>
+        const downPaymentButton = document.getElementById(`downPaymentBtn<?= $payment['id_reservasi'] ?>`);
+        const saveButton = document.getElementById(`savePaymentBtn<?= $payment['id_reservasi'] ?>`);
+        
+        // Reset button styles to their default state
+        downPaymentButton.classList.remove('success'); // Remove success class
+        saveButton.classList.remove('disabled'); // Enable the Save Payment button
+        saveButton.disabled = false; // Re-enable Save Payment button
+    <?php endforeach; ?>
+}
+
 </script>
+
 
 
 </body>
