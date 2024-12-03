@@ -166,16 +166,18 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <span class="ml-4"><?= htmlspecialchars($reservation['id_reservasi']) ?></span>
 
                             </div>
+
                             <div class="flex">
                                 <span class="w-32 font-semibold">Room Type</span>
                                 <span>: </span>
 
                                 <span class="ml-4"><?= htmlspecialchars($reservation['tipe_kamar']) ?></span>
                             </div>
+
                             <div class="flex">
-                                <span class="w-32 font-semibold"><?= $totalNights ?></span>
+                                <span class="w-32 font-semibold">Total Nights:</span>
                                 <span>: </span>
-                                <span class="ml-4">3</span>
+                                <span class="ml-4"><?= $totalNights ?></span>
 
                             </div>
                             <div class="flex">
@@ -204,7 +206,7 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <form action="datacheckin.php" method="POST">
                                 <input type="hidden" name="id_reservasi" value="<?= htmlspecialchars($reservation['id_reservasi']) ?>">
                                 <input type="hidden" name="id_prepayment" value="<?= htmlspecialchars($reservation['id_prepayment'] ?? '') ?>">
-                                <button type="submit" class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
+                                <button type="submit" class="outline outline-coklat bg-coklat text-boneWhite rounded-full w-full">Check-In</button>
                                 </form>
                             <?php else: ?>
                                 <button class="bg-gray text-boneWhite rounded-full cursor-not-allowed" disabled>Check-In</button>

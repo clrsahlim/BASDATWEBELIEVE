@@ -85,27 +85,15 @@ if ($status_prepayment === true) { // Status benar-benar "true" (boolean)
             <img id="userIcon" class="h-8 w-8 rounded-full" src="img/aaa.png" alt="User Icon">
         </div>
     </nav>
+
     
-    <body class="flex flex-col h-screen">
-    <body class="flex flex-col h-screen">
-        <nav class="bg-cream p-5 flex items-center justify-between relative">
-            <button id="tombolSidebar">
-                <img class="h-8 w-8" id="humb" src="img/1.png" alt="">
-            </button>
-            <h1 class="text-3xl font-audiowide absolute inset-0 flex justify-center items-center" style="pointer-events: none;">GUEST DATABASE</h1>
-            <div class="flex items-center space-x-4">
-                <div id="timeDisplay" class="bg-gray-200 px-3 py-1" style="margin-right: 1rem;"></div>
-                <img id="userIcon" class="h-8 w-8 rounded-full" src="img/aaa.png" alt="User Icon">
-            </div>
-        </nav>
-    
-        <div class="flex flex-1">
+    <div class="flex flex-1">
     <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
         <ul>
             <!-- Dashboard -->
             <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
                 <img class="h-5" src="img/dashboard.png" alt="">
-                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">DASHBOARD</a>
+                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
             </li>
 
             <!-- Room Management (Accessible for both admin and user) -->
@@ -148,7 +136,7 @@ if ($status_prepayment === true) { // Status benar-benar "true" (boolean)
             <?php if (isset($_SESSION['role'])) { ?>
     <li class="flex items-center mb-8 mr-2 gap-2">
         <img class="h-5" src="img/payment.png" alt="">
-        <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
+        <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl underline underline-offset-4">PRE-PAYMENT</a>
     </li>
 <?php } ?>
 

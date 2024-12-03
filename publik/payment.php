@@ -62,7 +62,7 @@ if ($_SESSION['role'] != 'admin') {
             <!-- Dashboard -->
             <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
                 <img class="h-5" src="img/dashboard.png" alt="">
-                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">DASHBOARD</a>
+                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
             </li>
 
             <!-- Room Management (Accessible for both admin and user) -->
@@ -112,7 +112,7 @@ if ($_SESSION['role'] != 'admin') {
             <?php if ($_SESSION['role'] == 'admin') { ?>
                 <li class="flex items-center mb-8 mr-2 gap-2">
                     <img class="h-5" src="img/payment.png" alt="">
-                    <a href="payment.php" class="font-audiowide text-xs md:text-xl">PAYMENT</a>
+                    <a href="payment.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">PAYMENT</a>
                 </li>
             <?php } ?>
         </ul>

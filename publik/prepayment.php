@@ -154,7 +154,7 @@ try {
                             <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
                                 <div class="flex items-center gap-5 pb-5">
                                     <p class="font-bold underline underline-offset-3">Payment Details</p>
-                                    <button class="outline <?= $data['status_prepayment'] == 'false' ? 'outline-green-500 bg-green-500' : 'outline-merah bg-merah' ?> rounded-full text-white px-3 text-xs font-semibold">
+                                    <button class="outline <?= $data['status_prepayment'] == 'false' ? 'outline-green-500 bg-green-500' : 'outline-merah bg-merah' ?> rounded-full text-boneWhite px-3 text-xs font-semibold">
                                         <?= $data['status_prepayment'] == 'false' ? 'Paid' : 'Down-Payment'?>
                                     </button>
                                 </div>
