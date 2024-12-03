@@ -1,6 +1,7 @@
 <?php
 session_start();
-
+include 'database.php';
+include 'save_payment.php';
 if (!isset($_SESSION['user_id'])) {
     // Pengguna belum login
     header('Location: login.php');
@@ -12,6 +13,35 @@ if ($_SESSION['role'] != 'admin') {
     header('Location: dasboard.php');
     exit;
 }
+
+try {
+    $query = "SELECT 
+        r.nama_tamu, 
+        r.tipe_kamar, 
+        c.id_reservasi, 
+        c.damage_charge, 
+        c.tanggal_checkout, 
+        p.deposit,
+        p.id_prepayment,
+        c.id_checkout
+      FROM check_out c
+      JOIN reservation r ON c.id_reservasi = r.id_reservasi
+      JOIN prepayment p ON c.id_reservasi = p.id_reservasi
+      WHERE c.status_checkout = true";
+
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+
+    $dataTamu = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($dataTamu)) {
+        echo "Data tidak ditemukan.";
+    }
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +55,7 @@ if ($_SESSION['role'] != 'admin') {
 </head>
 
 <style>
-    body{
+    body {
         font-family: 'Poppins', sans-serif;
     }
 
@@ -40,6 +70,16 @@ if ($_SESSION['role'] != 'admin') {
         font-weight: 600; 
         font-size: 0.875rem; 
         white-space: nowrap; 
+    }
+
+    /* Add styles for disabled button */
+    .disabled {
+        background-color: #D3D3D3;
+        cursor: not-allowed;
+    }
+
+    .success {
+        background-color: #28a745; /* Green color */
     }
 </style>
 
@@ -57,8 +97,9 @@ if ($_SESSION['role'] != 'admin') {
     </nav>
     
     <div class="flex flex-1">
-    <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
-        <ul>
+        <div id="sidebar" class="bg-coklat text-white md:w-72 min-h-full p-5 hidden">
+            <!-- Sidebar items -->
+            <ul>
             <!-- Dashboard -->
             <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
                 <img class="h-5" src="img/dashboard.png" alt="">
@@ -116,95 +157,105 @@ if ($_SESSION['role'] != 'admin') {
                 </li>
             <?php } ?>
         </ul>
+        </div>
+        
+        <div class="flex-1 p-10">
+            <div class="md:grid md:grid-cols-2 md:gap-6">
+                <?php foreach ($dataTamu as $payment): ?>
+                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
+                        <form action="save_payment.php" method="POST" id="paymentForm<?= $payment['id_reservasi'] ?>" onsubmit="return disableButtonAndChangeColor(event, <?= $payment['id_reservasi'] ?>)">
+                            <div class="flex items-center gap-5 pb-5">
+                                <p class="font-bold underline underline-offset-3">Payment Details</p>
+                                <button type="button" id="downPaymentBtn<?= $payment['id_reservasi'] ?>" class="outline outline-merah bg-merah rounded-full text-boneWhite px-3 text-xs font-semibold">
+                                    Down-Payment
+                                </button>
+                            </div>
+
+                            <div class="flex flex-col space-y-2">
+                                <input type="hidden" name="id_reservasi" value="<?= htmlspecialchars($payment['id_reservasi']) ?>">
+                                <input type="hidden" name="id_checkout" value="<?= htmlspecialchars($payment['id_checkout']) ?>">
+                                <input type="hidden" name="id_prepayment" value="<?= htmlspecialchars($payment['id_prepayment']) ?>">
+                                <input type="hidden" name="deposit" value="<?= $payment['deposit'] ?>">
+                                <input type="hidden" name="damage_charge" value="<?= $payment['damage_charge'] ?>">
+
+                                <div class="flex">
+                                    <span class="w-32 font-semibold">Guest Name</span>
+                                    <span>: </span>
+                                    <span class="ml-4"><?= htmlspecialchars($payment['nama_tamu']) ?></span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-32 font-semibold">Room Type</span>
+                                    <span>: </span>
+                                    <span class="ml-4"><?= htmlspecialchars($payment['tipe_kamar']) ?></span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-32 font-semibold">Deposit</span>
+                                    <span>: </span>
+                                    <span class="ml-4"><?= number_format($payment['deposit'], 0, ',', '.') ?></span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-32 font-semibold">Damage charges</span>
+                                    <span>: </span>
+                                    <span class="ml-4"><?= number_format($payment['damage_charge'], 0, ',', '.') ?></span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-32 font-semibold">Refund</span>
+                                    <span>: </span>
+                                    <span class="ml-4"><?= number_format($payment['deposit'] - $payment['damage_charge'], 0, ',', '.') ?></span>
+                                </div>
+
+                                <button type="submit" id="savePaymentBtn<?= $payment['id_reservasi'] ?>" class="outline outline-coklat bg-coklat text-boneWhite rounded-full px-4 py-2">
+                                    Save Payment
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
     </div>
-    <div class="flex-1 p-10">
-                <div class="md:grid md:grid-cols-2 md:gap-6">
+                        <script src="js/klik.js"></script>
+                        <script>
+    // Function to disable button and change color of Down-Payment button after form submission
+    function disableButtonAndChangeColor(event, reservationId) {
+        event.preventDefault(); // Prevent form from submitting immediately
+        const saveButton = document.getElementById(`savePaymentBtn${reservationId}`);
+        const downPaymentButton = document.getElementById(`downPaymentBtn${reservationId}`);
+        
+        // Disable Save Payment button
+        saveButton.classList.add('disabled');
+        saveButton.disabled = true;
+        
+        // Change Down-Payment button color to green
+        downPaymentButton.classList.add('success');
+        
+        // Save status to localStorage
+        localStorage.setItem(`paymentStatus${reservationId}`, 'completed');
+        
+        // Submit the form after changes
+        document.getElementById(`paymentForm${reservationId}`).submit();
+    }
 
-                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
-                        <div class="flex items-center gap-5 pb-5">
-                            <p class="font-bold underline underline-offset-3">Payment Details</p>
-                            <button class="outline outline-merah bg-merah rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                Down-Payment
-                            </button>
-                        </div>
-
-                        <div class="flex flex-col space-y-2">
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Guest Name</span>
-                                <span>: </span>
-                                <span class="ml-4">James Potter</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Reservation ID</span>
-                                <span>: </span>
-                                <span class="ml-4">021345</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Room Type</span>
-                                <span>: </span>
-                                <span class="ml-4">Family Room</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Total Charges</span>
-                                <span>: </span>
-                                <span class="ml-4">Rp 4.525.000</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Prepaid</span>
-                                <span>: </span>
-                                <span class="ml-4">Rp 2.500.000</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Total Charges</span>
-                                <span>: </span>
-                                <span class="ml-4">Rp 2.025.000</span>
-                            </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full"><a href="">Pay</a></button>
-                        </div>
-
-                    </div>
-                    <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
-                        <div class="flex items-center gap-5 pb-5">
-                            <p class="font-bold underline underline-offset-3">Payment Details</p>
-                        </div>
-
-                        <div class="flex flex-col space-y-2">
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Guest Name</span>
-                                <span>: </span>
-                                <span class="ml-4">Lucius Malfoy</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Reservation ID</span>
-                                <span>: </span>
-                                <span class="ml-4">231107</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Room Type</span>
-                                <span>: </span>
-                                <span class="ml-4">Executive Deluxe King</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Total Charges</span>
-                                <span>: </span>
-                                <span class="ml-4">Rp 4.500.000</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Prepaid</span>
-                                <span>: </span>
-                                <span class="ml-4">Rp 0</span>
-                            </div>
-                            <div class="flex">
-                                <span class="w-32 font-semibold">Charges Left</span>
-                                <span>: </span>
-                                <span class="ml-4">Rp 4.500.000</span>
-                            </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full"><a href="">Pay</a></button>
-                        </div>
-                    </div>
-</div>
+    // Check localStorage on page load to restore the button state
+    window.onload = function() {
+        // Iterate over each payment to restore its state based on localStorage
+        <?php foreach ($dataTamu as $payment): ?>
+            const paymentStatus = localStorage.getItem('paymentStatus<?= $payment['id_reservasi'] ?>');
+            if (paymentStatus === 'completed') {
+                const saveButton = document.getElementById('savePaymentBtn<?= $payment['id_reservasi'] ?>');
+                const downPaymentButton = document.getElementById('downPaymentBtn<?= $payment['id_reservasi'] ?>');
+                
+                // Disable Save Payment button
+                saveButton.classList.add('disabled');
+                saveButton.disabled = true;
+                
+                // Change Down-Payment button color to green
+                downPaymentButton.classList.add('success');
+            }
+        <?php endforeach; ?>
+    }
+</script>
 
 
-        <script src="js/klik.js"></script>
 </body>
 </html>
