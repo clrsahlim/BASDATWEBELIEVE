@@ -207,7 +207,7 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <button type="submit" class="outline outline-coklat bg-coklat text-boneWhite rounded-full">Check-In</button>
                                 </form>
                             <?php else: ?>
-                                <button class="outline outline-merah bg-merah text-boneWhite rounded-full cursor-not-allowed" disabled>Check-In</button>
+                                <button class="bg-gray text-boneWhite rounded-full cursor-not-allowed" disabled>Check-In</button>
                             <?php endif; ?>
                         </div>
 

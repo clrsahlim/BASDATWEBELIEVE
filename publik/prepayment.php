@@ -92,7 +92,7 @@ try {
             <!-- Dashboard -->
             <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
                 <img class="h-5" src="img/dashboard.png" alt="">
-                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">DASHBOARD</a>
+                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
             </li>
 
             <!-- Room Management (Accessible for both admin and user) -->
@@ -132,11 +132,11 @@ try {
             <?php } ?>
 
             <?php if (isset($_SESSION['role'])) { ?>
-    <li class="flex items-center mb-8 mr-2 gap-2">
-        <img class="h-5" src="img/payment.png" alt="">
-        <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl">PRE-PAYMENT</a>
-    </li>
-<?php } ?>
+                <li class="flex items-center mb-8 mr-2 gap-2">
+                    <img class="h-5" src="img/payment.png" alt="">
+                    <a href="<?php echo ($_SESSION['role'] == 'admin') ? 'prepayment.php' : 'prepayment_user.php'; ?>" class="font-audiowide text-xs md:text-xl underline underline-offset-4">PRE-PAYMENT</a>
+                </li>
+            <?php } ?>
 
             <!-- Payment (Only for admin) -->
             <?php if ($_SESSION['role'] == 'admin') { ?>
@@ -196,12 +196,13 @@ try {
                                         <span class="ml-4">Rp <?= number_format($data['total_charge'], 0, ',', '.') ?></span>
                                     </div>
                                     <button 
-                                        class="bg-coklat text-boneWhite rounded-full pay-button no-outline <?= $data['status_prepayment'] == 'true' ? 'bg-gray cursor-not-allowed' : '' ?>" 
+                                        class="bg-coklat text-boneWhite rounded-full pay-button no-outline <?= $data['status_prepayment'] == 'true' ? 'bg-gray text-boneWhite cursor-not-allowed' : '' ?>" 
                                         data-id="<?= $data['id_reservasi'] ?>" 
                                         <?= $data['status_prepayment'] == 'true' ? 'disabled' : '' ?>
                                     >
                                         <?= $data['status_prepayment'] == 'true' ? 'Paid' : 'Pay' ?>
                                     </button>
+
 
                                 </div>
                             </div>
@@ -232,7 +233,7 @@ try {
                         if (data.success) {
                             // Update button appearance
                             buttonElement.classList.remove('bg-coklat');
-                            buttonElement.classList.add('bg-gray', 'cursor-not-allowed');
+                            buttonElement.classList.add('bg-gray text-boneWhite', 'cursor-not-allowed');
                             buttonElement.disabled = true;
                             buttonElement.innerHTML = 'Paid';
                         } else {
