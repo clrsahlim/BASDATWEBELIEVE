@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'database.php';
 
 if (!isset($_SESSION['user_id'])) {
     // Pengguna belum login
@@ -11,6 +12,44 @@ if ($_SESSION['role'] != 'admin') {
     // Hanya admin yang bisa mengakses halaman ini
     header('Location: dasboard.php');
     exit;
+}
+
+try {
+    // Query untuk menghitung total kamar
+    $queryTotal = $conn->query("SELECT COUNT(*) as total_rooms FROM kamar");
+    $totalRooms = $queryTotal->fetch(PDO::FETCH_ASSOC)['total_rooms'];
+
+    // Query untuk menghitung kamar tersedia (status_kamar = true)
+    $queryAvailable = $conn->query("SELECT COUNT(*) as available_rooms FROM kamar WHERE status_kamar = true");
+    $availableRooms = $queryAvailable->fetch(PDO::FETCH_ASSOC)['available_rooms'];
+
+    // Query untuk menghitung kamar terisi (status_kamar = false)
+    $queryOccupied = $conn->query("SELECT COUNT(*) as occupied_rooms FROM kamar WHERE status_kamar = false");
+    $occupiedRooms = $queryOccupied->fetch(PDO::FETCH_ASSOC)['occupied_rooms'];
+
+    $queryCheckIn = $conn->query("SELECT COUNT(*) as checked_in FROM check_in WHERE status_checkin = true");
+    $checkedInGuests = $queryCheckIn->fetch(PDO::FETCH_ASSOC)['checked_in'];
+
+    // Query untuk Current Guests (Check-Out)
+    $queryCheckOut = $conn->query("SELECT COUNT(*) as checked_out FROM check_out WHERE status_checkout = true");
+    $checkedOutGuests = $queryCheckOut->fetch(PDO::FETCH_ASSOC)['checked_out'];
+
+    // Hitung Total Current Guests
+    $currentGuests = $checkedInGuests + $checkedOutGuests;
+
+    $queryPending = $conn->query("SELECT COUNT(*) as pending FROM prepayment WHERE status_prepayment = false");
+    $pending = $queryPending->fetch(PDO::FETCH_ASSOC)['pending'];
+
+    $queryPaid = $conn->query("SELECT COUNT(*) as paid FROM prepayment WHERE status_prepayment = true");
+    $paid= $queryPaid->fetch(PDO::FETCH_ASSOC)['paid'];
+
+    $queryReservations = $conn->query("SELECT COUNT(*) as reservations FROM reservation");
+    $reservations= $queryReservations->fetch(PDO::FETCH_ASSOC)['reservations'];
+
+
+} catch (PDOException $e) {
+    echo "Query failed: " . $e->getMessage();
+    die();
 }
 ?>
 
@@ -218,17 +257,17 @@ if ($_SESSION['role'] != 'admin') {
     </div>
     <main class="flex-1 lg:p-4">
                 <div class="grid gap-1 grid-cols-1">
-                    <div class="status-card">
+                    <div class="status-card font-semibold">
                         <div class="card-header">
                             <h2 class="font-bold card-text">Total Rooms</h2>
                         </div>
                         <div class="card-body">
                             <div class="left">
-                                <p class="body-card-text">50</p>
+                                <p class="body-card-text"><?php echo htmlspecialchars($totalRooms); ?></p>
                             </div>
                             <div class="right">
-                                <button class="btn-green text-lg w-full md:w-40">12 Available</button>
-                                <button class="btn-red text-lg w-full md:w-40">38 Occupied</button>
+                                <button class="btn-green text-lg w-full md:w-40"><?php echo htmlspecialchars($availableRooms); ?> Available</button>
+                                <button class="btn-red text-lg w-full md:w-40"><?php echo htmlspecialchars($occupiedRooms); ?> Occupied</button>
                             </div>
                         </div>
                     </div>
@@ -239,11 +278,11 @@ if ($_SESSION['role'] != 'admin') {
                         </div>
                         <div class="card-body">
                             <div class="left">
-                                <p class="body-card-text">10</p>
+                                <p class="body-card-text"><?php echo htmlspecialchars($currentGuests); ?></p>
                             </div>
                             <div class="right">
-                                <button class="btn-green text-lg w-full md:w-40">5 Checks-In</button>
-                                <button class="btn-red text-lg w-full md:w-40">5 Checks-Out</button>
+                                <button class="btn-green text-lg w-full md:w-40"><?php echo htmlspecialchars($checkedInGuests); ?> Checks-In</button>
+                                <button class="btn-red text-lg w-full md:w-40"><?php echo htmlspecialchars($checkedOutGuests); ?> Checks-Out</button>
                             </div>
                         </div>
                     </div>
@@ -254,11 +293,11 @@ if ($_SESSION['role'] != 'admin') {
                         </div>
                         <div class="card-body">
                             <div class="left">
-                                <p class="body-card-text">7</p>
+                                <p class="body-card-text"><?php echo htmlspecialchars($reservations); ?></p>
                             </div>
                             <div class="right">
-                                <button class="btn-green text-lg w-full md:w-40">2 Paid</button>
-                                <button class="btn-red text-lg w-full md:w-40">5 Pending</button>
+                                <button class="btn-green text-lg w-full md:w-40"><?php echo htmlspecialchars($paid); ?> Paid</button>
+                                <button class="btn-red text-lg w-full md:w-40"><?php echo htmlspecialchars($pending); ?> Pending</button>
                             </div>
                         </div>
                     </div>
