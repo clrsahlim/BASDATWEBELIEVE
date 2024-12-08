@@ -1,14 +1,51 @@
 <?php
 session_start();
+include 'database.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+if (!isset($_GET['id_checkout'])) {
+    echo "ID Checkout tidak ditemukan!";
     exit;
 }
 
+if (!isset($_SESSION['user_id'])) {
+  // Pengguna belum login
+  header('Location: login.php');
+  exit;
+}
+
 if ($_SESSION['role'] != 'admin') {
-    header('Location: dasboard.php');
-    exit;
+  // Hanya admin yang bisa mengakses halaman ini
+  header('Location: dashboard.php');
+  exit;
+}
+
+$id_checkout = $_GET['id_checkout'];
+
+
+if (isset($_POST['checkout'])) {
+  // Ambil total damage charge yang dikirim dari form
+  $total_damage_charge = isset($_POST['total_damage_charge']) ? $_POST['total_damage_charge'] : 0;
+
+  // Pastikan total damage charge adalah angka yang valid
+  $total_damage_charge = (int) $total_damage_charge;
+
+  // Ambil tanggal dan waktu saat ini
+  $tanggal_checkout = date('Y-m-d H:i:s');  // Format: YYYY-MM-DD HH:MM:SS
+
+  // Update database dan tampilkan hasilnya
+  $query = "UPDATE check_out SET damage_charge = :damage_charge, tanggal_checkout = :tanggal_checkout, status_checkout = TRUE WHERE id_checkout = :id_checkout";
+  $stmt = $conn->prepare($query);
+
+  // Bind parameter menggunakan bindValue() untuk PDO
+  $stmt->bindValue(':damage_charge', $total_damage_charge, PDO::PARAM_INT);
+  $stmt->bindValue(':tanggal_checkout', $tanggal_checkout, PDO::PARAM_STR);
+  $stmt->bindValue(':id_checkout', $id_checkout, PDO::PARAM_INT);
+
+  if ($stmt->execute()) {
+      echo "<script>alert('Damage charge, tanggal checkout, dan status berhasil disimpan!'); window.location.href = 'checkout.php';</script>";
+  } else {
+      echo "<script>alert('Gagal menyimpan data checkout!');</script>";
+  }
 }
 ?>
 
@@ -23,7 +60,7 @@ if ($_SESSION['role'] != 'admin') {
 </head>
 
 <style>
-    body {
+    *{
         font-family: 'Poppins', sans-serif;
     }
 
@@ -38,6 +75,12 @@ if ($_SESSION['role'] != 'admin') {
         font-weight: 600; 
         font-size: 0.875rem; 
         white-space: nowrap; 
+    }
+
+    button:hover {
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+      transform: translateY(-3px); /* Menarik tombol ke atas */
+      transition: all 0.5s ease; /* Efek transisi halus */
     }
 </style>
 
@@ -65,7 +108,7 @@ if ($_SESSION['role'] != 'admin') {
             <!-- Dashboard -->
             <li class="flex items-center mb-8 mr-2 gap-2 mt-5 hover:bg-">
                 <img class="h-5" src="img/dashboard.png" alt="">
-                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">DASHBOARD</a>
+                <a href="dasboard.php" class="font-audiowide text-xs md:text-xl">DASHBOARD</a>
             </li>
 
             <!-- Room Management (Accessible for both admin and user) -->
@@ -100,7 +143,7 @@ if ($_SESSION['role'] != 'admin') {
             <?php if ($_SESSION['role'] == 'admin') { ?>
                 <li class="flex items-center mb-8 mr-2 gap-2">
                     <img class="h-5" src="img/out.png" alt="">
-                    <a href="checkout.php" class="font-audiowide text-xs md:text-xl">CHECK OUT</a>
+                    <a href="checkout.php" class="font-audiowide text-xs md:text-xl underline underline-offset-4">CHECK OUT</a>
                 </li>
             <?php } ?>
 
@@ -129,195 +172,103 @@ if ($_SESSION['role'] != 'admin') {
       <!-- Left Content -->
       <div class=" border-r-2 border-cream grid grid-cols-2 gap-10 p-8">
         <!-- Room Damage -->
-        <div class=" p-4">
-          <h1 class="text-4xl mb-4 font-semibold">Room Damage</h1>
-          <form class="space-y-2">
+        <div class="p-4">
+          <h1 class="text-4xl mb-4 font-semibold">Room<br>Damage</h1>
+          <form id="damageForm" class="space-y-2">
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>Broken Wall (Rp 1,500,000)</label>
+              <input type="checkbox" name="room_damage[]" value="1000000" class="mr-2" onclick="updateDamageCharge()">Broken Wall (Rp 1,000,000)<br>
             </div>
             <!-- Repeat other checkboxes -->
-          </form>
+            <div class="flex items-center">
+              <input type="checkbox" name="room_damage[]" value="800000" class="mr-2" onclick="updateDamageCharge()">Broken Window (Rp 800,000)<br>
+            </div>
 
-          <form class="space-y-2">
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>Broken Window (Rp 1,500,000)</label>
+              <input type="checkbox" name="room_damage[]" value="1500000" class="mr-2" onclick="updateDamageCharge()">Sofa Damage (Rp 1,500,000)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
+
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>carpet damage (Rp 1,500,000)</label>
+              <input type="checkbox" name="room_damage[]" value="1000000" class="mr-2" onclick="updateDamageCharge()">Carpet Damage (Rp 1,000,000)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
+
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>sofa damage (Rp 1,500,000)</label>
+              <input type="checkbox" name="room_damage[]" value="0" class="mr-2" onclick="updateDamageCharge()">None (Rp 0)<br>
             </div>
-            <!-- Repeat other checkboxes -->
           </form>
-          <form class="space-y-2">
-            <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>Broken Wall (Rp 1,500,000)</label>
-            </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
-            <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>none </label>
-            </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          
         </div>
 
-        <!-- Bathroom Damage -->
-        <div class=" p-4">
+        <div class="p-4">
           <h1 class="text-4xl mb-4 font-semibold">Bathroom Damage</h1>
-          <form class="space-y-2">
+          <form id="damageForm" class="space-y-2">
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>shower damage (Rp 1,500,000)</label>
+              <input type="checkbox" name="bathroom_damage[]" value="500000" class="mr-2" onclick="updateDamageCharge()">Toilet Damage (Rp 500,000)<br>
             </div>
             <!-- Repeat other checkboxes -->
-          </form>
+            <div class="flex items-center">
+              <input type="checkbox" name="bathroom_damage[]" value="600000" class="mr-2" onclick="updateDamageCharge()">Shower/Tub Damage (Rp 600,000)<br>
+            </div>
 
-          <form class="space-y-2">
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>jetshower damage (Rp 1,500,000)</label>
+              <input type="checkbox" name="bathroom_damage[]" value="500000" class="mr-2" onclick="updateDamageCharge()">Sink Damage (Rp 500,000)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
+
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>closet (Rp 1,500,000)</label>
+              <input type="checkbox" name="bathroom_damage[]" value="400000" class="mr-2" onclick="updateDamageCharge()">Broken Mirror (Rp 400,000)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
+
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>water heater (Rp 1,500,000)</label>
+              <input type="checkbox" name="bathroom_damage[]" value="0" class="mr-2" onclick="updateDamageCharge()">None (Rp 0)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
-            <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>Broken Wall (Rp 1,500,000)</label>
-            </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
-            <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>none</label>
-            </div>
-            <!-- Repeat other checkboxes -->
           </form>
         </div>
 
-        <!-- Bedroom Damage -->
         <div class="p-4">
           <h1 class="text-4xl mb-4 font-semibold">Bedroom Damage</h1>
-          <form class="space-y-2">
+          <form id="damageForm" class="space-y-2">
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>Broken headshet (Rp 1,500,000)</label>
+              <input type="checkbox" name="bedroom_damage[]" value="800000" class="mr-2" onclick="updateDamageCharge()">Stained Carpet (Rp 800,000)<br>
             </div>
             <!-- Repeat other checkboxes -->
-          </form>
+            <div class="flex items-center">
+              <input type="checkbox" name="bedroom_damage[]" value="1000000" class="mr-2" onclick="updateDamageCharge()">Broken Bed Frame (Rp 1,000,000)<br>
+            </div>
 
-          <form class="space-y-2">
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>pillow damage (Rp 1,500,000)</label>
+              <input type="checkbox" name="bedroom_damage[]" value="400000" class="mr-2" onclick="updateDamageCharge()">Broken Lamp (Rp 400,000)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
+
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>Blanket damage (Rp 1,500,000)</label>
+              <input type="checkbox" name="bedroom_damage[]" value="1500000" class="mr-2" onclick="updateDamageCharge()">Mattress Damage(Rp 1,500,000)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
+
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>Badstead damge (Rp 1,500,000)</label>
+              <input type="checkbox" name="bedroom_damage[]" value="0" class="mr-2" onclick="updateDamageCharge()">None (Rp 0)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
-            <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>Broken Wall (Rp 1,500,000)</label>
-            </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
-            <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>none</label>
-            </div>
-            <!-- Repeat other checkboxes -->
           </form>
         </div>
 
-        <!-- Snack Charges -->
-        <div class=" p-4">
-          <h1 class="text-4xl mb-4 font-semibold">Snack Charges</h1>
-          <form class="space-y-2">
+         <div class="p-4">
+          <h1 class="text-4xl mb-4 font-semibold">Snack <br> Charges</h1>
+          <form id="damageForm" class="space-y-2">
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>m & ms(Rp 1,500)</label>
+              <input type="checkbox" name="snack_charges[]" value="50000" class="mr-2" onclick="updateDamageCharge()">Chips (Rp 50,000)<br>
             </div>
             <!-- Repeat other checkboxes -->
-          </form>
+            <div class="flex items-center">
+              <input type="checkbox" name="snack_charges[]" value="100000" class="mr-2" onclick="updateDamageCharge()">Chocolate (Rp 100,000)<br>
+            </div>
 
-          <form class="space-y-2">
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>kitkat(Rp 20,000)</label>
+              <input type="checkbox" name="snack_charges[]" value="100000" class="mr-2" onclick="updateDamageCharge()">Juice Box (Rp 100,000)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
+
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>lays (Rp 17,000)</label>
+              <input type="checkbox" name="snack_charges[]" value="50000" class="mr-2" onclick="updateDamageCharge()">Biscuit (Rp 50,000)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
+
             <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>oreo (Rp 20,000)</label>
+              <input type="checkbox" name="snack_charges[]" value="0" class="mr-2" onclick="updateDamageCharge()">None (Rp 0)<br>
             </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
-            <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>toblerone (Rp 50,000)</label>
-            </div>
-            <!-- Repeat other checkboxes -->
-          </form>
-          <form class="space-y-2">
-            <div class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <label>aqua reflection (Rp 15,000)</label>
-            </div>
-            <!-- Repeat other checkboxes -->
           </form>
         </div>
       </div>
@@ -328,19 +279,23 @@ if ($_SESSION['role'] != 'admin') {
         <div class="space-y-2">
           <pre>
             
-            <p>Room Damage      : Rp 0</p>
-            <p>Bedroom Damage   : Rp 0</p>
-            <p>Bathroom Damage  : Rp 0</p>
-            <p>Snack Charges    : Rp 25,000</p>
-            <p>Room Charges     : Rp 4,500,000</p>
+          <p id="roomDamageTotal">Room Damage: Rp 0</p>
+          <p id="bedroomDamageTotal">Bedroom Damage: Rp 0</p>
+          <p id="bathroomDamageTotal">Bathroom Damage: Rp 0</p>
+          <p id="snackChargesTotal">Snack Charges: Rp 0</p>
           </pre>
         </div>
-        <div class="border-t-2 pt-4 mt-4">
-          <p class="text-2xl font-bold">Total Charges: Rp 4,525,000</p>
-        </div>
-        <button class="bg-[#6C4E31] text-white px-6 py-2 rounded-md mt-4 hover:bg-yellow-600">
-          Check-Out
-        </button>
+
+        <form method="POST">
+          <div class="border-t-2 pt-4 mt-4">
+            <p class="text-2xl font-bold" id="finalTotal">Total Charges: Rp 0</p>
+          </div>
+          <input type="hidden" name="total_damage_charge" id="total_damage_charge">
+          <button class="bg-[#6C4E31] text-white px-3 py-2 rounded-md mt-4 hover:shadow-lg" type="submit" name="checkout">
+            Check-Out
+          </button>
+        </form>
+
       </div>
     </div>
   </section>
@@ -348,5 +303,48 @@ if ($_SESSION['role'] != 'admin') {
 
 
   <script src="js/klik.js"></script>
+  <script>
+  // Update the total charge dynamically
+    // Update the total charge dynamically
+function updateDamageCharge() {
+   let roomDamage = 0;
+   let bedroomDamage = 0;
+   let bathroomDamage = 0;
+   let snackCharges = 0;
+
+   // Get room damage
+   document.querySelectorAll('input[name="room_damage[]"]:checked').forEach((checkbox) => {
+     roomDamage += parseInt(checkbox.value);
+   });
+
+   // Get bedroom damage
+   document.querySelectorAll('input[name="bedroom_damage[]"]:checked').forEach((checkbox) => {
+     bedroomDamage += parseInt(checkbox.value);
+   });
+
+   // Get bathroom damage
+   document.querySelectorAll('input[name="bathroom_damage[]"]:checked').forEach((checkbox) => {
+     bathroomDamage += parseInt(checkbox.value);
+   });
+
+   document.querySelectorAll('input[name="snack_charges[]"]:checked').forEach((checkbox) => {
+     snackCharges += parseInt(checkbox.value);
+   });
+
+
+   // Update the displayed values
+   document.getElementById('roomDamageTotal').textContent = `Room Damage: Rp ${roomDamage.toLocaleString()}`;
+   document.getElementById('bedroomDamageTotal').textContent = `Bedroom Damage: Rp ${bedroomDamage.toLocaleString()}`;
+   document.getElementById('bathroomDamageTotal').textContent = `Bathroom Damage: Rp ${bathroomDamage.toLocaleString()}`;
+   document.getElementById('snackChargesTotal').textContent = `Snack Charges: Rp ${snackCharges.toLocaleString()}`;
+
+   // Calculate and update the final total
+   const total = roomDamage + bedroomDamage + bathroomDamage + snackCharges;
+   document.getElementById('finalTotal').textContent = `Total Charges: Rp ${total.toLocaleString()}`;
+
+   // Set the hidden input value
+   document.getElementById('total_damage_charge').value = total;  // Update hidden input value
+}
+</script>
 </body>
 </html>

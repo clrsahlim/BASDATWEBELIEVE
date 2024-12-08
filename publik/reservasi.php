@@ -100,8 +100,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         'total_harga' => $total_harga
                     ];
             
-                    // Redirect ke halaman prepayment_user
-                    header("Location: prepayment_user.php");
+                    if ($_SESSION['role'] == 'admin') {
+                        header("Location: prepayment.php"); // Admin akan diarahkan ke prepayment.php
+                    } else {
+                        header("Location: prepayment_user.php"); // User akan diarahkan ke prepayment_user.php
+                    }
                     exit();
                 } else {
                     echo "Failed to add prepayment data.";
