@@ -182,9 +182,21 @@ try {
                     <div class="outline outline-coklat m-5 rounded-2xl p-3 pl-5">
                         <div class="flex items-center gap-5 pb-5">
                             <p class="font-bold underline underline-offset-3">Reservation Details</p>
-                            <button class="outline outline-merah bg-merah rounded-full text-boneWhite px-3 text-xs font-semibold">
-                                Late Check-Out
-                            </button>
+                            <?php if (isset($checkout['id_checkout'])): ?>
+                                <?php
+                                // Ambil status_checkout dari tabel check_out
+                                $statusQuery = "SELECT status_checkout FROM check_out WHERE id_checkout = :id_checkout";
+                                $statusStmt = $conn->prepare($statusQuery);
+                                $statusStmt->execute([':id_checkout' => $checkout['id_checkout']]);
+                                $status = $statusStmt->fetch(PDO::FETCH_ASSOC);
+
+                                if ($status && $status['status_checkout'] == true): ?>
+                                    <!-- Tombol Checked-Out -->
+                                    <button class="outline outline-green-500 bg-green-500 rounded-full text-boneWhite px-3 text-xs font-semibold">
+                                        Checked-Out
+                                    </button>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </div>
 
                         <div class="flex flex-col space-y-2">
@@ -216,9 +228,26 @@ try {
                                     : 'Belum Check Out' ?>
                                 </span>
                             </div>
-                            <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">
-                                <a href="checkout2.php?id_checkout=<?= htmlspecialchars($checkout['id_checkout']) ?>" class="details-button">Details</a>
-                            </button>
+                            <?php if (isset($checkout['id_checkout'])): ?>
+                                <?php
+                                // Ambil status_checkout dari tabel check_out
+                                $statusQuery = "SELECT status_checkout FROM check_out WHERE id_checkout = :id_checkout";
+                                $statusStmt = $conn->prepare($statusQuery);
+                                $statusStmt->execute([':id_checkout' => $checkout['id_checkout']]);
+                                $status = $statusStmt->fetch(PDO::FETCH_ASSOC);
+
+                                if ($status && $status['status_checkout'] == true): ?>
+                                    <!-- Tombol tidak aktif -->
+                                    <button class="bg-gray text-boneWhite rounded-full" disabled>
+                                        Details
+                                    </button>
+                                <?php else: ?>
+                                    <!-- Tombol aktif -->
+                                    <button class="outline outline-coklat bg-coklat text-boneWhite rounded-full">
+                                        <a href="checkout2.php?id_checkout=<?= htmlspecialchars($checkout['id_checkout']) ?>" class="details-button">Details</a>
+                                    </button>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php endforeach; ?>
