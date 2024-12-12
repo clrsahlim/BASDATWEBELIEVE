@@ -129,14 +129,6 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="flex-1 p-10">
 
-                <label class="relative block">
-                    <span class="sr-only">Search</span>
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
-                      <img class="h-5 w-5 " viewBox="0 0 20 20" src="img/IconSeacrh.png"></img>
-                    </span>
-                    <input class="placeholder:font-bold placeholder:text-coklat placeholder:text-opacity-50 block bg-white w-full border border-coklat rounded-2xl py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-coklat focus:ring-coklat focus:ring-1" placeholder="Search reservations..." type="text" name="search"/>
-                </label>
-
                 <div class="md:grid md:grid-cols-2 md:gap-6">
 
                 <?php foreach ($reservations as $reservation): 
