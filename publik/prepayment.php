@@ -15,6 +15,26 @@ if ($_SESSION['role'] != 'admin') {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    $id_reservasi = $_POST['id_reservasi'];
+
+    try {
+        $deletePrepayment = $conn->prepare("DELETE FROM prepayment WHERE id_reservasi = :id_reservasi");
+        $deleteReservation = $conn->prepare("DELETE FROM reservation WHERE id_reservasi = :id_reservasi");
+
+        $deletePrepayment->bindParam(':id_reservasi', $id_reservasi);
+        $deleteReservation->bindParam(':id_reservasi', $id_reservasi);
+
+        $deletePrepayment->execute();
+        $deleteReservation->execute();
+
+        echo json_encode(['success' => true]);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
 try {
     // Query untuk mengambil data dari kedua tabel
     $sql = "SELECT 
@@ -208,7 +228,11 @@ try {
                                     >
                                         <?= $data['status_prepayment'] == 'true' ? 'Paid' : 'Pay' ?>
                                     </button>
-
+                                    <button 
+                                        class="bg-merah text-boneWhite rounded-full delete-button no-outline" 
+                                        data-id="<?= $data['id_reservasi'] ?>">
+                                        Delete
+                                    </button>
 
                                 </div>
                             </div>
@@ -251,7 +275,39 @@ try {
                     });
                 });
             });
-        </script>
 
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const idReservasi = this.getAttribute('data-id');
+                    const confirmation = confirm('Are you sure you want to delete this record?');
+
+                    if (!confirmation) return;
+
+                    fetch('prepayment.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `action=delete&id_reservasi=${idReservasi}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Record deleted successfully!');
+                            // Hapus elemen dari DOM
+                            this.closest('.outline').remove();
+                        } else {
+                            console.error('Error deleting record:', data.error);
+                        }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    });
+                });
+
+        </script>
 </body>
 </html>
